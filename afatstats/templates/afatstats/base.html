@@ -20,23 +20,45 @@
               </div>
               <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                  <li class="active"><a href="{% url 'afatstats:index' %}">Home</a></li>
+                  <li class=""><a href="{% url 'afatstats:index' %}">Home</a></li>
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Capsuleers <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a href="{% url 'afatstats:capsuleers_index' %}">Top Players</a></li>
+                      {% if "afatstats.capsuleer_logi" in permissions %}
+                      <li><a href="{% url 'afatstats:capsuleers_top' %}">Top Players</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_logi" in permissions or "afatstats.capsuleer_boosts" in permissions or "afatstats.capsuleer_tackle" in permissions or "afatstats.capsuleer_snowflakes" in permissions %}
                       <li role="separator" class="divider"></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_logi" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_logi' %}">Top Logi</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_boosts" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_boosts' %}">Top Boosts</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_tackle" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_tackle' %}">Top Tackle</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_snowflakes" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_snowflakes' %}">Top Snowflakes</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_caps" in permissions or "afatstats.capsuleer_fax" in permissions or "afatstats.capsuleer_supers" in permissions or "afatstats.capsuleer_titans" in permissions %}
                       <li role="separator" class="divider"></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_caps" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_caps' %}">Top Capitals</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_fax" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_fax' %}">Top FAX</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_supers" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_supers' %}">Top Supercapitals</a></li>
+                      {% endif %}
+                      {% if "afatstats.capsuleer_titans" in permissions %}
                       <li><a href="{% url 'afatstats:capsuleers_titans' %}">Top Titans</a></li>
+                      {% endif %}
                     </ul>
                   </li>
                   {% if False %}

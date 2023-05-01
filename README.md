@@ -11,9 +11,9 @@ An alliance auth plugin that extends ppfeufer's aFAT plugin with more statistics
   * Top FAX
   * Top supers
   * Top titans
+* Permissions for every statistic
 
 ## Planned
-* Permissions for every sub-menu, so not everyone can access how many titans joined recently.
 * Corporations leaderboard
   * Absolute Participation (all fats for the current month)
   * Relative Participation (all fats relative to their size)
@@ -41,3 +41,17 @@ An alliance auth plugin that extends ppfeufer's aFAT plugin with more statistics
 
 # Warning
 This plugin is not production ready.
+
+## Permissions
+Perm | Admin Site | Auth Site 
+ --- | --- | --- 
+basic_access | None | Can view this app
+capsuleer_top | None | Can access capsuleer top statistics
+capsuleer_logi | None | Can access capsuleer logi statistics
+capsuleer_boosts | None | Can access capsuleer boosts statistics
+capsuleer_tackle | None | Can access capsuleer tackle statistics
+capsuleer_snowflakes | None | Can access capsuleer snowflakes statistics
+capsuleer_caps | None | Can access capsuleer caps statistics
+capsuleer_fax | None | Can access capsuleer fax statistics
+capsuleer_supers | None | Can access capsuleer supers statistics
+capsuleer_titans | None | Can access capsuleer titans statistics

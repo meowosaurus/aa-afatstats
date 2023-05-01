@@ -17,8 +17,11 @@ from allianceauth.authentication.models import *
 
 from .models import *
 
-def generate_context(title):
-    context = {"title": title}
+def generate_context(request, title):
+    context = {"title": title,
+               "permissions": request.user.get_all_permissions()}
+
+    print(request.user.get_all_permissions())
 
     return context
 
@@ -108,7 +111,7 @@ def index(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
-    context = {"text": "Hello, World!"}
+    context = generate_context(request, "Top Players")
 
     # Find all main characters and their alt characters
     find_main_characters()
@@ -120,18 +123,22 @@ def index(request: WSGIRequest) -> HttpResponse:
 
     context.update({'account_fat_counts': account_fat_counts})
 
+    
+
     return render(request, "afatstats/index.html", context)
 
 ### Players
 
-def capsuleers_index(request: WSGIRequest) -> HttpResponse:
+@login_required
+@permission_required("afatstats.capsuleer_top")
+def capsuleers_top(request: WSGIRequest) -> HttpResponse:
     """
     Index view
     :param request:
     :return:
     """
 
-    context = {"text": "Hello, World!"}
+    context = generate_context(request, "Top Players")
 
     # Find all main characters and their alt characters
     find_main_characters()
@@ -145,8 +152,10 @@ def capsuleers_index(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_logi")
 def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top Logis")
+    context = generate_context(request, "Top Logis")
 
     ships = {"Burst", "Scalpel", "Scythe", "Scimitar"}
 
@@ -154,8 +163,10 @@ def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_boosts")
 def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top Boosts")
+    context = generate_context(request, "Top Boosts")
 
     ships = {"Bifrost", "Claymore"}
 
@@ -163,8 +174,10 @@ def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_tackle")
 def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top Tackle")
+    context = generate_context(request, "Top Tackle")
 
     ships = {"Stiletto", "Slasher", "Rifter", "Sabre"}
 
@@ -172,8 +185,10 @@ def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_snowflakes")
 def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top Snowflakes")
+    context = generate_context(request, "Top Snowflakes")
 
     ships = {"Huginn", "Rapier"}
 
@@ -181,8 +196,10 @@ def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_caps")
 def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top Caps")
+    context = generate_context(request, "Top Caps")
 
     ships = {"Naglfar", "Nidhoggur"}
 
@@ -190,8 +207,10 @@ def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_fax")
 def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top FAX")
+    context = generate_context(request, "Top FAX")
 
     ships = {"Lif"}
 
@@ -199,8 +218,10 @@ def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_supers")
 def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top Supers")
+    context = generate_context(request, "Top Supers")
 
     ships = {"Hel"}
 
@@ -208,8 +229,10 @@ def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/index.html", context)
 
+@login_required
+@permission_required("afatstats.capsuleer_titans")
 def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
-    context = generate_context("Top Titans")
+    context = generate_context(request, "Top Titans")
 
     ships = {"Ragnarok"}
 

@@ -12,7 +12,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     
     ### Capsuleers
-    path("capsuleers/", views.capsuleers_index, name="capsuleers_index"),
+    path("capsuleers/", views.capsuleers_top, name="capsuleers_top"),
     path("capsuleers/logi/", views.capsuleers_logi, name="capsuleers_logi"),
     path("capsuleers/boosts/", views.capsuleers_boosts, name="capsuleers_boosts"),
     path("capsuleers/tackle/", views.capsuleers_tackle, name="capsuleers_tackle"),

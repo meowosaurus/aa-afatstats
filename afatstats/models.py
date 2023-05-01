@@ -15,7 +15,16 @@ class General(models.Model):
 
         managed = False
         default_permissions = ()
-        permissions = (("basic_access", "Can access this app"),)
+        permissions = (("basic_access", "Can access this app"),
+                      ("capsuleer_top", "Can access capsuleer top statistics"),
+                      ("capsuleer_logi", "Can access capsuleer logi statistics"),
+                      ("capsuleer_boosts", "Can access capsuleer boosts statistics"),
+                      ("capsuleer_tackle", "Can access capsuleer tackle statistics"),
+                      ("capsuleer_snowflakes", "Can access capsuleer snowflakes statistics"),
+                      ("capsuleer_caps", "Can access capsuleer caps statistics"),
+                      ("capsuleer_fax", "Can access capsuleer fax statistics"),
+                      ("capsuleer_supers", "Can access capsuleer supers statistics"),
+                      ("capsuleer_titans", "Can access capsuleer titans statistics"),)
 
 
 class MainCharacters(models.Model):
