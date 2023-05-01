@@ -1,0 +1,75 @@
+{% extends 'allianceauth/base.html' %}
+{% load i18n %}
+
+{% block page_title %}{% translate "FAT Leaderboard" %}{% endblock %}
+
+{% block content %}
+    <br />
+
+    <div class="allianceauth-afatstats-plugin">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">FAT Leaderboard</a>
+              </div>
+              <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                  <li class="active"><a href="{% url 'afatstats:index' %}">Home</a></li>
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Capsuleers <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a href="{% url 'afatstats:capsuleers_index' %}">Top Players</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="{% url 'afatstats:capsuleers_logi' %}">Top Logi</a></li>
+                      <li><a href="{% url 'afatstats:capsuleers_boosts' %}">Top Boosts</a></li>
+                      <li><a href="{% url 'afatstats:capsuleers_tackle' %}">Top Tackle</a></li>
+                      <li><a href="{% url 'afatstats:capsuleers_snowflakes' %}">Top Snowflakes</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="{% url 'afatstats:capsuleers_caps' %}">Top Capitals</a></li>
+                      <li><a href="{% url 'afatstats:capsuleers_fax' %}">Top FAX</a></li>
+                      <li><a href="{% url 'afatstats:capsuleers_supers' %}">Top Supercapitals</a></li>
+                      <li><a href="{% url 'afatstats:capsuleers_titans' %}">Top Titans</a></li>
+                    </ul>
+                  </li>
+                  {% if False %}
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Corporations <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Top Corporations</a></li>
+                      <li><a href="#">Total Participation</a></li>
+                      <li><a href="#">Relative Participation</a></li>
+                      <li><a href="#">Shit Statistic</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">Logi Participation</a></li>
+                      <li><a href="#">Boosts Participation</a></li>
+                      <li><a href="#">Tackle Participation</a></li>
+                      <li><a href="#">Snowflakes Participation</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="#">FAX Participation</a></li>
+                      <li><a href="#">Capitals Participation</a></li>
+                      <li><a href="#">Supercapitals Participation</a></li>
+                      <li><a href="#">Titans Participation</a></li>
+                    </ul>
+                  </li>
+                  {% endif %}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li><a href="../navbar-static-top/">Search</a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+        {% block details %}{% endblock %}
+    </div>
+{% endblock %}
