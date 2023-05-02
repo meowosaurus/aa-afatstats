@@ -44,4 +44,4 @@ def register_menu():
 def register_urls():
     """Register app urls"""
 
-    return UrlHook(urls, "afatstats", r"^afatstats/")
+    return UrlHook(urls, "fat-leaderboard", r"^fat-leaderboard/")

@@ -69,15 +69,16 @@
                       {% endif %}
                     </ul>
                   </li>
-                  {% if False %}
+                  
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Corporations <span class="caret"></span>
+                      <i class="fas fa-users"></i>
+                      Corporations <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a href="#">Top Corporations</a></li>
-                      <li><a href="#">Total Participation</a></li>
-                      <li><a href="#">Relative Participation</a></li>
+                      <li><a href="{% url 'afatstats:corporations_total' %}">Total Participation</a></li>
+                      <li><a href="{% url 'afatstats:corporations_relative' %}">Relative Participation</a></li>
+                      {% if False %}
                       <li><a href="#">Shit Statistic</a></li>
                       <li role="separator" class="divider"></li>
                       <li><a href="#">Logi Participation</a></li>
@@ -89,9 +90,10 @@
                       <li><a href="#">Capitals Participation</a></li>
                       <li><a href="#">Supercapitals Participation</a></li>
                       <li><a href="#">Titans Participation</a></li>
+                      {% endif %}
                     </ul>
                   </li>
-                  {% endif %}
+                  
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                   <li>

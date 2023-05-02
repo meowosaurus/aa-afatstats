@@ -39,4 +39,3 @@ class MainCharacters(models.Model):
 
 
 
-

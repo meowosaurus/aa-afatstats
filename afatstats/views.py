@@ -162,3 +162,103 @@ def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "afatstats/capsuleers.html", context)
 
+### Corporations
+
+def corporations_total(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Total Corp Participation")
+    
+    all_corps = EveCorporationInfo.objects.all()
+    all_fat_links = AFatLink.objects.all()
+    
+    corporation_data = dict()
+    account_data = dict()
+
+    count = 0
+
+    for corps in all_corps:
+        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
+
+        corporation_data[corps.corporation_name] = (corps.corporation_id,
+                                                    corps.corporation_name,
+                                                    corps.corporation_ticker,
+                                                    corps.member_count, 
+                                                    0, # Players
+                                                    0) # FATs
+
+        # Used to get the actual player count, not the member count
+        corporation_players = {}
+
+        if corp_characters.exists():
+            corp_temp_data = list(corporation_data[corps.corporation_name])
+
+            for corp_char in corp_characters:
+                # Find main and save it in corporation_players
+                records = OwnershipRecord.objects.filter(character=corp_char)
+                for record in records:
+                    if record.user not in corporation_players:
+                        corporation_players[record.user] = set()
+                        corporation_players[record.user].add(corp_char)
+                    else:
+                        corporation_players[record.user].add(corp_char)
+
+                # Calculate how many FATs a character has
+                all_fats = AFat.objects.filter(character=corp_char)
+                for fat in all_fats:
+                    corp_temp_data[5] += 1
+
+            # Get the amount of actual players
+            corp_temp_data[4] = len(corporation_players)
+
+            corporation_data[corps.corporation_name] = tuple(corp_temp_data)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][4], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+def corporations_relative(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+    
+    all_corps = EveCorporationInfo.objects.all()
+    all_fat_links = AFatLink.objects.all()
+    
+    corporation_data = dict()
+    account_data = dict()
+
+    count = 0
+
+    for corps in all_corps:
+        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
+
+        corporation_data[corps.corporation_name] = (corps.corporation_id,
+                                                    corps.corporation_name,
+                                                    corps.corporation_ticker,
+                                                    corps.member_count, 
+                                                    0, # Player count
+                                                    0) # FAT count
+
+
+
+        if corp_characters.exists():
+            corp_temp_data = list(corporation_data[corps.corporation_name])
+
+            for corp_char in corp_characters:
+                # Find main
+                records = OwnershipRecord.objects.filter(character=corp_char)
+                print(records)
+
+                # Calculate how many FATs a character has
+                all_fats = AFat.objects.filter(character=corp_char)
+                for fat in all_fats:
+                    
+                    corp_temp_data[5] += 1
+
+            corporation_data[corps.corporation_name] = tuple(corp_temp_data)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][4], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+

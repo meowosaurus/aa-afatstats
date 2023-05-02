@@ -22,4 +22,8 @@ urlpatterns = [
     path("capsuleers/fax/", views.capsuleers_fax, name="capsuleers_fax"),
     path("capsuleers/supers/", views.capsuleers_supers, name="capsuleers_supers"),
     path("capsuleers/titans/", views.capsuleers_titans, name="capsuleers_titans"),
+
+    ### Corporations
+    path("corporations/", views.corporations_total, name="corporations_total"),
+    path("corporations/relative/", views.corporations_relative, name="corporations_relative"),
 ]
