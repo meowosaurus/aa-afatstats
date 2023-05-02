@@ -1,0 +1,57 @@
+{% extends 'afatstats/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title">
+                {{ title }}
+            </div>
+        </div>
+
+        <div class="panel-body">
+            {% if account_fat_counts|length == 0 %}
+            <div class="alert alert-warning" role="alert">
+                No data found - did anyone already FAT a fleet?
+            </div>
+            {% else %}
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width: 25%;">Top</th>
+                    <th scope="col" style="width: 25%;">Player</th>
+                    <th scope="col" style="width: 25%;">Corporation</th>
+                    <th scope="col" style="width: 25%;">FATs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in account_fat_counts.items %}
+                    <tr>
+                        <td># {{ forloop.counter }}</td>
+                        <td>
+                            <img src="https://images.evetech.net/characters/{{ value.0 }}/portrait?size=32">
+                            {{ key }}
+                        </td>
+                        <td>
+                            <img src="https://images.evetech.net/corporations/{{ value.1 }}/logo?size=32">
+                            {{ value.2 }}
+                        </td>
+                        <td>{{ value.3 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+              {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

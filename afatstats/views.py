@@ -17,88 +17,11 @@ from allianceauth.authentication.models import *
 
 from .models import *
 
+from .capsuleer_helper import *
+
 def generate_context(request, title):
     context = {"title": title,
                "permissions": request.user.get_all_permissions()}
-
-    print(request.user.get_all_permissions())
-
-    return context
-
-def get_main_characters_array():
-    characters = EveCharacter.objects.all()
-
-    users = {}
-    for character in characters:
-        records = OwnershipRecord.objects.filter(character=character)
-        for record in records:
-            if record.user not in users:
-                users[record.user] = set()
-                # main character needs to be first
-                users[record.user].add(character)
-            else:
-                users[record.user].add(character)
-
-    return users
-
-def find_main_characters():
-    characters = EveCharacter.objects.all()
-
-    for character in characters:
-        records = OwnershipRecord.objects.filter(character=character)
-        for record in records:
-            # Create new row if it doesn't exist yet
-            if not MainCharacters.objects.filter(alt_character=character.character_name):
-                char = MainCharacters()
-                char.main_character = record.user
-                char.alt_character = character.character_name
-                char.save()
-
-def get_fats_count():
-    account_fat_counts = dict()
-
-    all_fat_links = AFatLink.objects.all()
-    all_fats = AFat.objects.all()
-
-    for fat in all_fats:
-        char = MainCharacters.objects.get(alt_character=fat.character)
-        if char:
-            if char.main_character not in account_fat_counts:
-                account_fat_counts[char.main_character] = 1
-            else:
-                account_fat_counts[char.main_character] += 1
-
-    return account_fat_counts
-
-def get_fats_count_type(ships):
-    account_fat_counts = dict()
-
-    all_fat_links = AFatLink.objects.all()
-    all_fats = AFat.objects.all()
-
-    for fat in all_fats:
-        if not fat.shiptype in ships:
-            continue
-
-        char = MainCharacters.objects.get(alt_character=fat.character)
-        if char:
-            if char.main_character not in account_fat_counts:
-                account_fat_counts[char.main_character] = 1
-            else:
-                account_fat_counts[char.main_character] += 1
-
-    return account_fat_counts
-
-def ships_view(context, ships):
-    # Find all main characters and their alt characters
-    find_main_characters()
-    # Count all fats
-    counts = get_fats_count_type(ships)
-
-    # Sort array from big to small (FAT based)
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
 
     return context
 
@@ -111,21 +34,11 @@ def index(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
-    context = generate_context(request, "Top Players")
+    context = generate_context(request, "Top Total")
 
-    # Find all main characters and their alt characters
-    find_main_characters()
-    # Count all fats
-    counts = get_fats_count()
+    context = index_view(context)
 
-    # Sort array from big to small (FAT based)
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
-
-    
-
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 ### Players
 
@@ -138,105 +51,114 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
-    context = generate_context(request, "Top Players")
+    context = generate_context(request, "Top Total")
 
-    # Find all main characters and their alt characters
-    find_main_characters()
-    # Count all fats
-    counts = get_fats_count()
+    context = index_view(context)
 
-    # Sort array from big to small (FAT based)
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
-
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_logi")
 def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Logis")
 
-    ships = {"Burst", "Scalpel", "Scythe", "Scimitar"}
+    ships = {"Burst", "Scalpel", "Scythe", "Scimitar",
+             "Navitas", "Thalia", "Exequror", "Oneiros",
+             "Bantam", "Kirin", "Osprey", "Basilisk",
+             "Inquisitor", "Deacon", "Augoror", "Guardian"}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_boosts")
 def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Boosts")
 
-    ships = {"Bifrost", "Claymore"}
+    ships = {"Bifrost", "Claymore", "Slepnir",
+             "Magus", "Astarte", "Eos",
+             "Stork", "Nighthawk", "Vulture",
+             "Pontifex", "Absolution", "Damnation"}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_tackle")
 def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Tackle")
 
-    ships = {"Stiletto", "Slasher", "Rifter", "Sabre"}
+    ships = {"Stiletto", "Slasher", "Rifter", "Sabre", "Claw", 
+             "Incursus", "Atron", "Ares", "Taranis", "Eris", 
+             "Condor", "Merlin", "Crow", "Raptor", "Flycatcher",
+             "Punisher", "Executioner", "Malediction", "Crusader", "Heretic"}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_snowflakes")
 def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Snowflakes")
 
-    ships = {"Huginn", "Rapier"}
+    ships = {"Vigil", "Vigil Fleet Issue", "Hyena", "Huginn", "Rapier", "Panther",
+             "Maulus", "Maulus Navy Issue", "Keres", "Arazu", "Lachesis", "Sin",
+             "Griffin", "Griffin Navy Issue", "Kitsune", "Rook", "Falcon", "Widow",
+             "Crucifier", "Crucifier Navy Issue", "Sentinel", "Curse", "Pilgrim", "Redeemer",
+             "Curor", "Ashimmu", "Bhaalgorn", "Daredevil", "Vigilant", "Vindicator", 
+             "Garmur", "Orthrus", "Barghest"}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_caps")
 def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Caps")
 
-    ships = {"Naglfar", "Nidhoggur"}
+    ships = {"Nidhoggur", "Naglfar", "Naglfar Navy Issue",
+             "Thanatos", "Moros", "Moros Navy Issue",
+             "Chimera", "Phoenix", "Phoenix Navy Issue",
+             "Archon", "Revelation", "Revelation Navy Issue"}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_fax")
 def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top FAX")
 
-    ships = {"Lif"}
+    ships = {"Lif", "Ninazu", "Minokawa", "Apostle", "Loggerhead", "Dagon", ""}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_supers")
 def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Supers")
 
-    ships = {"Hel"}
+    ships = {"Hel", "Nyx", "Wyvern", "Aeon", "Vendetta", ""}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
 @login_required
 @permission_required("afatstats.capsuleer_titans")
 def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Titans")
 
-    ships = {"Ragnarok"}
+    ships = {"Ragnarok", "Erebus", "Leviathan", "Avatar", "Molok", "Komodo", "Vanquisher"}
 
     context = ships_view(context, ships)
 
-    return render(request, "afatstats/index.html", context)
+    return render(request, "afatstats/capsuleers.html", context)
 
