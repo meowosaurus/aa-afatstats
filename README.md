@@ -38,6 +38,7 @@ An alliance auth plugin that extends ppfeufer's aFAT plugin with more statistics
   * Titans FAT increase / decrease
 * Automated updates every x minutes
 * Introducing graphs
+* Search
 
 # Warning
 This plugin is not production ready.
