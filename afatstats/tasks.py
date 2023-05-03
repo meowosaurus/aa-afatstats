@@ -29,9 +29,13 @@ def afatstats_task():
 @shared_task
 def recalculate_data():
 
-    recalculate_player_data()
-    recalculate_corp_data()
+    try:
+        recalculate_player_data()
+    except Exception as e:
+        logger.debug(f"Unable to automatically recalculate player data")
 
-    print("test")
-    logger.debug(f"Data Source")
+    try:
+        recalculate_corp_data()
+    except Exception as e:
+        logger.debug(f"Unable to automatically recalculate corporation data")
 

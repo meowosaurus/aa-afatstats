@@ -37,9 +37,6 @@ def index(request: WSGIRequest) -> HttpResponse:
     :param request:
     :return:
     """
-
-    afatstats_task.delay()
-
     context = generate_context(request, "Top Total")
 
     recalculate_player_data()
