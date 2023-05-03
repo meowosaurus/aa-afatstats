@@ -56,7 +56,17 @@ WARNING: THIS PLUGIN IS NOT PRODUCTION READY!
 
 2.) Add `afatstat` to your `INSTALLED_APPS` in your projects `local.py`
 
-3.) Migrate, then restart your server
+3.) Add the following celery task to your `local.py`
+
+```python
+# afatstats - https://github.com/meowosaurus/aa-afatstats
+CELERYBEAT_SCHEDULE['afatstats_recalculate_data'] = {
+    'task': 'afatstats.tasks.recalculate_data',
+    'schedule': crontab(minute="*/1", hour="0"),
+}
+```
+
+4.) Migrate, then restart your server
 
 ## Alliance Auth Development 
 Make sure you have installed alliance auth in the correct way: https://allianceauth.readthedocs.io/en/latest/development/dev_setup/index.html
@@ -69,13 +79,23 @@ Make sure you have installed alliance auth in the correct way: https://alliancea
 
 4.) Add `afatstat` to your `INSTALLED_APPS` in your projects `local.py`
 
-5.) Change directory into `myauth`
+5.) Add the following celery task to your `local.py`
 
-6.) Make migrations with `python manage.py makemigrations`
+```python
+# afatstats - https://github.com/meowosaurus/aa-afatstats
+CELERYBEAT_SCHEDULE['afatstats_recalculate_data'] = {
+    'task': 'afatstats.tasks.recalculate_data',
+    'schedule': crontab(minute="*/1", hour="0"),
+}
+```
 
-7.) Migrate with `python manage.py migrate`
+6.) Change directory into `myauth`
 
-8.) Restart auth with `python manage.py runserver`
+7.) Make migrations with `python manage.py makemigrations`
+
+8.) Migrate with `python manage.py migrate`
+
+9.) Restart auth with `python manage.py runserver`
 
 ## Permissions
 Perm | Admin Site | Auth Site 
