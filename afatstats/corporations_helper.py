@@ -19,13 +19,11 @@ from .capsuleer_helper import *
 
 def del_corp_models():
     CorporationData.objects.all().delete()
-    CorporationMains.objects.all().delete()
+    #CorporationMains.objects.all().delete()
     # Should be deleted automatically, but just in case
-    CorporationAlts.objects.all().delete()
+    #CorporationAlts.objects.all().delete()
 
 def generate_corps_data(total = True):
-    corps_data = CorporationData.objects.all().order_by('-fats')
-
     if total is False:
         corps_data = CorporationData.objects.all().order_by('-rel_fats')
     else:

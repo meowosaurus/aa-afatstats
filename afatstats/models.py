@@ -70,16 +70,30 @@ class CorporationData(models.Model):
         return "[" + self.corporation_ticker + "] " + self.corporation_name
 
 class CorporationMains(models.Model):
-    main_character = models.CharField(max_length=255,
+    character_name = models.CharField(max_length=255,
                                       unique=True)
 
-    corporation_name = models.OneToOneField(CorporationData, on_delete=models.CASCADE)
+    character_id = models.IntegerField(default=0)
+
+    #corporation_name = models.OneToOneField(CorporationData, on_delete=models.CASCADE)
+    corporation_name = models.CharField(max_length=255)
+
+    corporation_id = models.IntegerField(default=0)
+
+    fats = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.character_name
 
 class CorporationAlts(models.Model):
     alt_character = models.CharField(max_length=255,
                                       unique=True)
 
-    main_character = models.ForeignKey(CorporationMains, on_delete=models.CASCADE)
+    #main_character = models.ForeignKey(CorporationMains, on_delete=models.CASCADE)
+    main_character = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.alt_character + " -> " + self.main_character
 
 
 
