@@ -25,6 +25,75 @@ def generate_context(request, title):
 
     return context
 
+#########################################################################
+
+def get_corp_main_char(corp_char, corporation_players):
+    records = OwnershipRecord.objects.filter(character=corp_char)
+    for record in records:
+        if record.user not in corporation_players:
+            corporation_players[record.user] = set()
+            corporation_players[record.user].add(corp_char)
+        else:
+            corporation_players[record.user].add(corp_char)
+
+    return corporation_players
+
+def get_corp_char_fats(corp_char, corp_temp_data):
+    all_fats = AFat.objects.filter(character=corp_char)
+    for fat in all_fats:
+        corp_temp_data += 1
+
+    return corp_temp_data
+
+def get_corporation_data(context, total):
+    all_corps = EveCorporationInfo.objects.all()
+    all_fat_links = AFatLink.objects.all()
+    
+    corporation_data = dict()
+    account_data = dict()
+
+    count = 0
+
+    for corps in all_corps:
+        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
+
+        corporation_data[corps.corporation_name] = (corps.corporation_id,
+                                                    corps.corporation_name,
+                                                    corps.corporation_ticker,
+                                                    corps.member_count, 
+                                                    0, # Players
+                                                    0) # FATs
+
+        # Used to get the actual player count, not the member count
+        corporation_players = {}
+
+        if corp_characters.exists():
+            corp_temp_data = list(corporation_data[corps.corporation_name])
+
+            for corp_char in corp_characters:
+                # Find main and save it in corporation_players
+                corporation_players = get_corp_main_char(corp_char, corporation_players)
+
+                # Calculate how many FATs a character has
+                corp_temp_data[5] = get_corp_char_fats(corp_char, corp_temp_data[5])
+
+            # Get the amount of actual players
+            corp_temp_data[4] = len(corporation_players)
+
+            corporation_data[corps.corporation_name] = tuple(corp_temp_data)
+
+    # If FATs have to be relative to their corp size (actual players)
+    if total is False:
+        for key, corp_data in corporation_data.items():
+            corp_temp_data = list(corp_data)
+            if corp_temp_data[4] != 0 or corp_temp_data[5] != 0:
+                corp_temp_data[5] = corp_temp_data[5] / corp_temp_data[4]
+                corporation_data[key] = tuple(corp_temp_data)
+
+    return corporation_data
+
+#########################################################################
+
 @login_required
 @permission_required("afatstats.basic_access")
 def index(request: WSGIRequest) -> HttpResponse:
@@ -164,99 +233,27 @@ def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
 
 ### Corporations
 
+@login_required
+@permission_required("afatstats.corporations_total")
 def corporations_total(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Total Corp Participation")
-    
-    all_corps = EveCorporationInfo.objects.all()
-    all_fat_links = AFatLink.objects.all()
-    
-    corporation_data = dict()
-    account_data = dict()
 
-    count = 0
+    corporation_data = get_corporation_data(context, True)
 
-    for corps in all_corps:
-        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
-
-        corporation_data[corps.corporation_name] = (corps.corporation_id,
-                                                    corps.corporation_name,
-                                                    corps.corporation_ticker,
-                                                    corps.member_count, 
-                                                    0, # Players
-                                                    0) # FATs
-
-        # Used to get the actual player count, not the member count
-        corporation_players = {}
-
-        if corp_characters.exists():
-            corp_temp_data = list(corporation_data[corps.corporation_name])
-
-            for corp_char in corp_characters:
-                # Find main and save it in corporation_players
-                records = OwnershipRecord.objects.filter(character=corp_char)
-                for record in records:
-                    if record.user not in corporation_players:
-                        corporation_players[record.user] = set()
-                        corporation_players[record.user].add(corp_char)
-                    else:
-                        corporation_players[record.user].add(corp_char)
-
-                # Calculate how many FATs a character has
-                all_fats = AFat.objects.filter(character=corp_char)
-                for fat in all_fats:
-                    corp_temp_data[5] += 1
-
-            # Get the amount of actual players
-            corp_temp_data[4] = len(corporation_players)
-
-            corporation_data[corps.corporation_name] = tuple(corp_temp_data)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][4], reverse=True))
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
 
     context.update({'corp_fat_counts': corp_fat_counts})
             
     return render(request, "afatstats/corporations.html", context)
 
+@login_required
+@permission_required("afatstats.corporations_relative")
 def corporations_relative(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Relative Corp Participation")
-    
-    all_corps = EveCorporationInfo.objects.all()
-    all_fat_links = AFatLink.objects.all()
-    
-    corporation_data = dict()
-    account_data = dict()
 
-    count = 0
+    corporation_data = get_corporation_data(context, False)
 
-    for corps in all_corps:
-        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
-
-        corporation_data[corps.corporation_name] = (corps.corporation_id,
-                                                    corps.corporation_name,
-                                                    corps.corporation_ticker,
-                                                    corps.member_count, 
-                                                    0, # Player count
-                                                    0) # FAT count
-
-
-
-        if corp_characters.exists():
-            corp_temp_data = list(corporation_data[corps.corporation_name])
-
-            for corp_char in corp_characters:
-                # Find main
-                records = OwnershipRecord.objects.filter(character=corp_char)
-                print(records)
-
-                # Calculate how many FATs a character has
-                all_fats = AFat.objects.filter(character=corp_char)
-                for fat in all_fats:
-                    
-                    corp_temp_data[5] += 1
-
-            corporation_data[corps.corporation_name] = tuple(corp_temp_data)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][4], reverse=True))
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
 
     context.update({'corp_fat_counts': corp_fat_counts})
             

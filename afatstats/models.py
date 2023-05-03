@@ -24,7 +24,9 @@ class General(models.Model):
                       ("capsuleer_caps", "Can access capsuleer caps statistics"),
                       ("capsuleer_fax", "Can access capsuleer fax statistics"),
                       ("capsuleer_supers", "Can access capsuleer supers statistics"),
-                      ("capsuleer_titans", "Can access capsuleer titans statistics"),)
+                      ("capsuleer_titans", "Can access capsuleer titans statistics"),
+                      ("corporations_total", "Can access corporations total statistics"),
+                      ("corporations_relative", "Can access corporations relative statistics"),)
 
 
 class MainCharacters(models.Model):

@@ -76,8 +76,12 @@
                       Corporations <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                      {% if "afatstats.corporations_total" in permissions %}
                       <li><a href="{% url 'afatstats:corporations_total' %}">Total Participation</a></li>
+                      {% endif %}
+                      {% if "afatstats.corporations_relative" in permissions %}
                       <li><a href="{% url 'afatstats:corporations_relative' %}">Relative Participation</a></li>
+                      {% endif %}
                       {% if False %}
                       <li><a href="#">Shit Statistic</a></li>
                       <li role="separator" class="divider"></li>
@@ -95,6 +99,7 @@
                   </li>
                   
                 </ul>
+                {% if False %}
                 <ul class="nav navbar-nav navbar-right">
                   <li>
                     <a href="#">
@@ -103,6 +108,7 @@
                     </a>
                   </li>
                 </ul>
+                {% endif %}
               </div>
             </div>
           </nav>

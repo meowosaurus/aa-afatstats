@@ -6,20 +6,21 @@ This plugin is not production ready.
 
 # Current Features
 * Capsuleer leaderboard
-  * Top logi
-  * Top boosts
-  * Top tackle
-  * Top snowflakes 
-  * Top caps
+  * Top Logi
+  * Top Boosts
+  * Top Tackle
+  * Top Snowflakes 
+  * Top Caps
   * Top FAX
-  * Top supers
-  * Top titans
+  * Top Supers
+  * Top Titans
+* Corporations leaderboard
+  * Absolute Participation (all fats for the current month)
+  * Relative Participation (all fats relative to their size)
 * Permissions for every statistic
 
 ## Planned
 * Corporations leaderboard
-  * Absolute Participation (all fats for the current month)
-  * Relative Participation (all fats relative to their size)
   * Shit metric (Admin selects the min. FATs per month and it calculates how bad a corporation is relative to their size)
   * Logi Participation
   * Boosts Participation
@@ -89,3 +90,5 @@ capsuleer_caps | None | Can access capsuleer caps statistics
 capsuleer_fax | None | Can access capsuleer fax statistics
 capsuleer_supers | None | Can access capsuleer supers statistics
 capsuleer_titans | None | Can access capsuleer titans statistics
+corporations_total | None | Can access corporation total statistics
+corporations_relative | None | Can access corporation relative statistics
