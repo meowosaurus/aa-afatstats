@@ -17,6 +17,66 @@ from .models import *
 
 from .capsuleer_helper import *
 
+def del_corp_models():
+    CorporationData.objects.all().delete()
+    CorporationMains.objects.all().delete()
+    # Should be deleted automatically, but just in case
+    CorporationAlts.objects.all().delete()
+
+def generate_corps_data(total = True):
+    corps_data = CorporationData.objects.all().order_by('-fats')
+
+    if total is False:
+        corps_data = CorporationData.objects.all().order_by('-rel_fats')
+    else:
+        corps_data = CorporationData.objects.all().order_by('-fats')
+
+    return corps_data
+
+def recalculate_corp_data():
+    del_corp_models()
+
+    all_corps = EveCorporationInfo.objects.all()
+
+    for corps in all_corps:
+        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
+
+        corp_data = CorporationData()
+        corp_data.corporation_name = corps.corporation_name
+        corp_data.corporation_id = corps.corporation_id
+        corp_data.corporation_ticker = corps.corporation_ticker
+        corp_data.member_count = corps.member_count
+        corp_data.players = 0
+        corp_data.fats = 0
+        corp_data.rel_fats = 0
+
+        # Used to get the actual player count, not the member count
+        corporation_players = {}
+
+        ships = ""
+
+        if corp_characters.exists():
+
+            for corp_char in corp_characters:
+                # Find main and save it in corporation_players
+                records = OwnershipRecord.objects.filter(character=corp_char)
+                for record in records:
+                    if record.user not in corporation_players:
+                        corporation_players[record.user] = set()
+                        corporation_players[record.user].add(corp_char)
+                    else:
+                        corporation_players[record.user].add(corp_char)
+
+                # Calculate how many FATs a character has
+                all_fats = AFat.objects.filter(character=corp_char)
+                for fat in all_fats:
+                    corp_data.fats += 1
+            
+            corp_data.players = len(corporation_players)
+            corp_data.rel_fats = corp_data.fats / corp_data.players
+
+        corp_data.save()
+
 def get_corp_main_char(corp_char, corporation_players):
     records = OwnershipRecord.objects.filter(character=corp_char)
     for record in records:

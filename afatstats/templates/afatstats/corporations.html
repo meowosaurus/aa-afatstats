@@ -11,7 +11,7 @@
         </div>
 
         <div class="panel-body">
-            {% if corp_fat_counts|length == 0 %}
+            {% if corp_data|length == 0 %}
             <div class="alert alert-warning" role="alert">
                 No data found - did anyone already FAT a fleet?
             </div>
@@ -27,20 +27,26 @@
                   </tr>
                 </thead>
                 <tbody>
-                    {% for key, value in corp_fat_counts.items %}
+                    {% for data in corp_data %}
                     <tr>
                         <td># {{ forloop.counter }}</td>
                         <td>
-                            <img src="https://images.evetech.net/corporations/{{ value.0 }}/logo?size=32">
-                            {{ key }}
+                            <img src="https://images.evetech.net/corporations/{{ data.corporation_id }}/logo?size=32">
+                            {{ data.corporation_name }}
                         </td>
                         <td>
-                            {{ value.4 }}
+                            {{ data.players }}
                         </td>
                         <td>
-                            {{ value.3 }}
+                            {{ data.member_count }}
                         </td>
-                        <td>{{ value.5 }}</td>
+                        <td>
+                            {% if total_fats %}
+                                {{ data.fats }}
+                            {% else %}
+                                {{ data.rel_fats }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

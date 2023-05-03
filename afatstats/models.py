@@ -49,6 +49,37 @@ class MainCharacters(models.Model):
     def __str__(self):
         return self.main_character + ": " + self.alt_character
 
+class CorporationData(models.Model):
+    corporation_name = models.CharField(max_length=255,
+                                        unique=True)
+
+    corporation_id = models.IntegerField(default=0)
+
+    corporation_ticker = models.CharField(max_length=255,
+                                        unique=True)
+
+    member_count = models.IntegerField(default=0)
+
+    players = models.IntegerField(default=0)
+
+    fats = models.IntegerField(default=0)
+
+    rel_fats = models.FloatField(default=0)
+
+    def __str__(self):
+        return "[" + self.corporation_ticker + "] " + self.corporation_name
+
+class CorporationMains(models.Model):
+    main_character = models.CharField(max_length=255,
+                                      unique=True)
+
+    corporation_name = models.OneToOneField(CorporationData, on_delete=models.CASCADE)
+
+class CorporationAlts(models.Model):
+    alt_character = models.CharField(max_length=255,
+                                      unique=True)
+
+    main_character = models.ForeignKey(CorporationMains, on_delete=models.CASCADE)
 
 
 

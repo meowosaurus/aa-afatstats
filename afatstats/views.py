@@ -28,8 +28,6 @@ def generate_context(request, title):
 
 #########################################################################
 
-#########################################################################
-
 @login_required
 @permission_required("afatstats.basic_access")
 def index(request: WSGIRequest) -> HttpResponse:
@@ -174,11 +172,12 @@ def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
 def corporations_total(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Total Corp Participation")
 
-    corporation_data = get_corporation_data(context, True)
+    recalculate_corp_data()
 
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+    corporation_data = generate_corps_data(True)
 
-    context.update({'corp_fat_counts': corp_fat_counts})
+    context.update({'corp_data': corporation_data})
+    context.update({'total_fats': True})
             
     return render(request, "afatstats/corporations.html", context)
 
@@ -187,11 +186,12 @@ def corporations_total(request: WSGIRequest) -> HttpResponse:
 def corporations_relative(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Relative Corp Participation")
 
-    corporation_data = get_corporation_data(context, False)
+    recalculate_corp_data()
 
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
+    corporation_data = generate_corps_data(False)
+    
+    context.update({'corp_data': corporation_data})
+    context.update({'total_fats': False})
             
     return render(request, "afatstats/corporations.html", context)
 
