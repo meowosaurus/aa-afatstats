@@ -6,7 +6,8 @@ import logging
 # Third Party
 from celery import shared_task
 
-from .capsuleer_helper import find_main_characters
+from .capsuleer_helper import recalculate_player_data
+from .corporations_helper import recalculate_corp_data
 
 logger = logging.getLogger(__name__)
 
@@ -21,11 +22,16 @@ def afatstats_task():
     """afatstats Task"""
 
     logger.debug(f"Data Source")
+    print("test1")
 
     pass
 
 @shared_task
-def get_main_characters():
+def recalculate_data():
+
+    recalculate_player_data()
+    recalculate_corp_data()
+
     print("test")
-    find_main_characters()
+    logger.debug(f"Data Source")
 

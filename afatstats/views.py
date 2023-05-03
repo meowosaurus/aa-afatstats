@@ -19,6 +19,7 @@ from .models import *
 
 from .capsuleer_helper import *
 from .corporations_helper import *
+from .tasks import *
 
 def generate_context(request, title):
     context = {"title": title,
@@ -37,6 +38,8 @@ def index(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
+    afatstats_task.delay()
+
     context = generate_context(request, "Top Total")
 
     recalculate_player_data()
@@ -50,6 +53,28 @@ def index(request: WSGIRequest) -> HttpResponse:
     context.update({'account_fat_counts': account_fat_counts})
 
     return render(request, "afatstats/capsuleers.html", context)
+
+def search(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Search for Players or Corporations")
+
+    query = request.GET.get('query')
+
+    search_results = dict()
+
+    if query:
+        results = CorporationAlts.objects.filter(alt_character=query)
+
+        for result in results:
+            character = CorporationMains.objects.filter(character_name=result.main_character)
+            if character:
+                search_results[character] = set()
+                search_results[character] = (result.alt_character, 
+                                             character.character_name,
+                                             character.character_id,
+                                             character.corporation_name,
+                                             character.corporation_id)
+
+    return render(request, "afatstats/search.html", context)
 
 ### Players
 
@@ -75,7 +100,7 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
 @login_required
 @permission_required("afatstats.capsuleer_logi")
 def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Top Total")
+    context = generate_context(request, "Top Logistics")
 
     ships = {"Burst", "Scalpel", "Scythe", "Scimitar",
              "Navitas", "Thalia", "Exequror", "Oneiros",
@@ -213,7 +238,7 @@ def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
 @login_required
 @permission_required("afatstats.corporations_total")
 def corporations_total(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Total Corp Participation")
+    context = generate_context(request, "Total Corp Participation Top 50")
 
     corporation_data = generate_corps_data(True)
 
@@ -225,7 +250,7 @@ def corporations_total(request: WSGIRequest) -> HttpResponse:
 @login_required
 @permission_required("afatstats.corporations_relative")
 def corporations_relative(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
+    context = generate_context(request, "Relative Corp Participation Top 50")
 
     corporation_data = generate_corps_data(False)
     

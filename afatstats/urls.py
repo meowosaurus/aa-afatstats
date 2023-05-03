@@ -10,6 +10,7 @@ app_name: str = "afatstats"
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("search/", views.search, name="search"),
     
     ### Capsuleers
     path("capsuleers/", views.capsuleers_top, name="capsuleers_top"),

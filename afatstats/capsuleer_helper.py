@@ -17,7 +17,6 @@ from .models import *
 
 def del_player_models():
     CorporationMains.objects.all().delete()
-    # Should be deleted automatically, but just in case
     CorporationAlts.objects.all().delete()
 
 def get_fats(ships = ""):
