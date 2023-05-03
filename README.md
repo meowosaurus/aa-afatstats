@@ -17,11 +17,6 @@ This plugin is not production ready.
 * Corporations leaderboard
   * Absolute Participation (all fats for the current month)
   * Relative Participation (all fats relative to their size)
-* Permissions for every statistic
-
-## Planned
-* Corporations leaderboard
-  * Shit metric (Admin selects the min. FATs per month and it calculates how bad a corporation is relative to their size)
   * Logi Participation
   * Boosts Participation
   * Tackle Participation
@@ -30,6 +25,11 @@ This plugin is not production ready.
   * FAX Participation
   * Supers Participation
   * Titans Participation
+* Permissions for every statistic
+
+## Planned
+* Corporations leaderboard
+  * Shit metric (Admin selects the min. FATs per month and it calculates how bad a corporation is relative to their size)
 * Alliance statistics
   * FAT increase / decrease compared to other months
   * Logi FAT increase / decrease
@@ -92,3 +92,11 @@ capsuleer_supers | None | Can access capsuleer supers statistics
 capsuleer_titans | None | Can access capsuleer titans statistics
 corporations_total | None | Can access corporation total statistics
 corporations_relative | None | Can access corporation relative statistics
+corporations_logi | None | Can access corporation logi statistics
+corporations_boosts | None | Can access corporation boosts statistics
+corporations_tackle | None | Can access corporation tackle statistics
+corporations_snowflakes | None | Can access corporation snowflakes statistics
+corporations_caps | None | Can access corporation caps statistics
+corporations_fax | None | Can access corporation fax statistics
+corporations_supers | None | Can access corporation supers statistics
+corporations_titans | None | Can access corporation titans statistics

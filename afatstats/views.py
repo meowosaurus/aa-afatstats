@@ -18,6 +18,7 @@ from allianceauth.authentication.models import *
 from .models import *
 
 from .capsuleer_helper import *
+from .corporations_helper import *
 
 def generate_context(request, title):
     context = {"title": title,
@@ -26,71 +27,6 @@ def generate_context(request, title):
     return context
 
 #########################################################################
-
-def get_corp_main_char(corp_char, corporation_players):
-    records = OwnershipRecord.objects.filter(character=corp_char)
-    for record in records:
-        if record.user not in corporation_players:
-            corporation_players[record.user] = set()
-            corporation_players[record.user].add(corp_char)
-        else:
-            corporation_players[record.user].add(corp_char)
-
-    return corporation_players
-
-def get_corp_char_fats(corp_char, corp_temp_data):
-    all_fats = AFat.objects.filter(character=corp_char)
-    for fat in all_fats:
-        corp_temp_data += 1
-
-    return corp_temp_data
-
-def get_corporation_data(context, total):
-    all_corps = EveCorporationInfo.objects.all()
-    all_fat_links = AFatLink.objects.all()
-    
-    corporation_data = dict()
-    account_data = dict()
-
-    count = 0
-
-    for corps in all_corps:
-        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
-
-        corporation_data[corps.corporation_name] = (corps.corporation_id,
-                                                    corps.corporation_name,
-                                                    corps.corporation_ticker,
-                                                    corps.member_count, 
-                                                    0, # Players
-                                                    0) # FATs
-
-        # Used to get the actual player count, not the member count
-        corporation_players = {}
-
-        if corp_characters.exists():
-            corp_temp_data = list(corporation_data[corps.corporation_name])
-
-            for corp_char in corp_characters:
-                # Find main and save it in corporation_players
-                corporation_players = get_corp_main_char(corp_char, corporation_players)
-
-                # Calculate how many FATs a character has
-                corp_temp_data[5] = get_corp_char_fats(corp_char, corp_temp_data[5])
-
-            # Get the amount of actual players
-            corp_temp_data[4] = len(corporation_players)
-
-            corporation_data[corps.corporation_name] = tuple(corp_temp_data)
-
-    # If FATs have to be relative to their corp size (actual players)
-    if total is False:
-        for key, corp_data in corporation_data.items():
-            corp_temp_data = list(corp_data)
-            if corp_temp_data[4] != 0 or corp_temp_data[5] != 0:
-                corp_temp_data[5] = corp_temp_data[5] / corp_temp_data[4]
-                corporation_data[key] = tuple(corp_temp_data)
-
-    return corporation_data
 
 #########################################################################
 
@@ -203,7 +139,7 @@ def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
 def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top FAX")
 
-    ships = {"Lif", "Ninazu", "Minokawa", "Apostle", "Loggerhead", "Dagon", ""}
+    ships = {"Lif", "Ninazu", "Minokawa", "Apostle", "Loggerhead", "Dagon"}
 
     context = ships_view(context, ships)
 
@@ -214,7 +150,7 @@ def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
 def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Supers")
 
-    ships = {"Hel", "Nyx", "Wyvern", "Aeon", "Vendetta", ""}
+    ships = {"Hel", "Nyx", "Wyvern", "Aeon", "Vendetta"}
 
     context = ships_view(context, ships)
 
@@ -259,3 +195,139 @@ def corporations_relative(request: WSGIRequest) -> HttpResponse:
             
     return render(request, "afatstats/corporations.html", context)
 
+@login_required
+@permission_required("afatstats.corporations_logi")
+def corporations_logi(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Burst", "Scalpel", "Scythe", "Scimitar",
+             "Navitas", "Thalia", "Exequror", "Oneiros",
+             "Bantam", "Kirin", "Osprey", "Basilisk",
+             "Inquisitor", "Deacon", "Augoror", "Guardian"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+@login_required
+@permission_required("afatstats.corporations_boosts")
+def corporations_boosts(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Bifrost", "Claymore", "Slepnir",
+             "Magus", "Astarte", "Eos",
+             "Stork", "Nighthawk", "Vulture",
+             "Pontifex", "Absolution", "Damnation"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+@login_required
+@permission_required("afatstats.corporations_tackle")
+def corporations_tackle(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Stiletto", "Slasher", "Rifter", "Sabre", "Claw", 
+             "Incursus", "Atron", "Ares", "Taranis", "Eris", 
+             "Condor", "Merlin", "Crow", "Raptor", "Flycatcher",
+             "Punisher", "Executioner", "Malediction", "Crusader", "Heretic"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+@login_required
+@permission_required("afatstats.corporations_snowflakes")
+def corporations_snowflakes(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Vigil", "Vigil Fleet Issue", "Hyena", "Huginn", "Rapier", "Panther",
+             "Maulus", "Maulus Navy Issue", "Keres", "Arazu", "Lachesis", "Sin",
+             "Griffin", "Griffin Navy Issue", "Kitsune", "Rook", "Falcon", "Widow",
+             "Crucifier", "Crucifier Navy Issue", "Sentinel", "Curse", "Pilgrim", "Redeemer",
+             "Curor", "Ashimmu", "Bhaalgorn", "Daredevil", "Vigilant", "Vindicator", 
+             "Garmur", "Orthrus", "Barghest"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+@login_required
+@permission_required("afatstats.corporations_caps")
+def corporations_caps(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Nidhoggur", "Naglfar", "Naglfar Navy Issue",
+             "Thanatos", "Moros", "Moros Navy Issue",
+             "Chimera", "Phoenix", "Phoenix Navy Issue",
+             "Archon", "Revelation", "Revelation Navy Issue"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+@login_required
+@permission_required("afatstats.corporations_fax")
+def corporations_fax(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Lif", "Ninazu", "Minokawa", "Apostle", "Loggerhead", "Dagon"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+@login_required
+@permission_required("afatstats.corporations_supers")
+def corporations_supers(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Hel", "Nyx", "Wyvern", "Aeon", "Vendetta"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)
+
+@login_required
+@permission_required("afatstats.corporations_titans")
+def corporations_titans(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Relative Corp Participation")
+
+    ships = {"Ragnarok", "Erebus", "Leviathan", "Avatar", "Molok", "Komodo", "Vanquisher"}
+
+    corporation_data = get_corporation_data(context, True, ships)
+
+    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
+
+    context.update({'corp_fat_counts': corp_fat_counts})
+            
+    return render(request, "afatstats/corporations.html", context)

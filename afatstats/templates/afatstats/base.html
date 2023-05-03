@@ -84,16 +84,32 @@
                       {% endif %}
                       {% if False %}
                       <li><a href="#">Shit Statistic</a></li>
+                      {% endif %}
                       <li role="separator" class="divider"></li>
-                      <li><a href="#">Logi Participation</a></li>
-                      <li><a href="#">Boosts Participation</a></li>
-                      <li><a href="#">Tackle Participation</a></li>
-                      <li><a href="#">Snowflakes Participation</a></li>
+                      {% if "afatstats.corporations_logi" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_logi' %}">Logi Participation</a></li>
+                      {% endif %}
+                      {% if "afatstats.corporations_boosts" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_boosts' %}">Boosts Participation</a></li>
+                      {% endif %}
+                      {% if "afatstats.corporations_tackle" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_tackle' %}">Tackle Participation</a></li>
+                      {% endif %}
+                      {% if "afatstats.corporations_snowflakes" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_snowflakes' %}">Snowflakes Participation</a></li>
+                      {% endif %}
                       <li role="separator" class="divider"></li>
-                      <li><a href="#">FAX Participation</a></li>
-                      <li><a href="#">Capitals Participation</a></li>
-                      <li><a href="#">Supercapitals Participation</a></li>
-                      <li><a href="#">Titans Participation</a></li>
+                      {% if "afatstats.corporations_caps" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_caps' %}">Capitals Participation</a></li>
+                      {% endif %}
+                      {% if "afatstats.corporations_fax" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_fax' %}">FAX Participation</a></li>
+                      {% endif %}
+                      {% if "afatstats.corporations_supers" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_supers' %}">Supercapitals Participation</a></li>
+                      {% endif %}
+                      {% if "afatstats.corporations_titans" in permissions %}
+                      <li><a href="{% url 'afatstats:corporations_titans' %}">Titans Participation</a></li>
                       {% endif %}
                     </ul>
                   </li>
