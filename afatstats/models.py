@@ -95,143 +95,10 @@ class CorporationAlts(models.Model):
 
 ##########################################################
 
-class CapsuleersTotal(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersLogi(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersBoosts(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersTackle(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersSnowflakes(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersCaps(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersFAX(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersSupers(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
-class CapsuleersTitans(models.Model):
-    character_name = models.CharField(max_length=255,
-                                      unique=True)
-
-    character_id = models.IntegerField(default=0)
-
-    corporation_name = models.CharField(max_length=255)
-
-    corporation_id = models.IntegerField(default=0)
-
-    fats = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.character_name + ": " + str(self.fats)
-
 class CapsuleersStat(models.Model):
-    stat = models.CharField(max_length=255)
+    stat = models.CharField(max_length=255, unique=True, default="")
+
+    identifier = models.IntegerField(default=0)
 
     character_name = models.CharField(max_length=255)
 
@@ -244,5 +111,5 @@ class CapsuleersStat(models.Model):
     fats = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.character_name + ": " + str(self.fats)
+        return "(" + str(self.identifier) + ") " + self.character_name + ": " + str(self.fats)
 

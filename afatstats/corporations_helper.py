@@ -113,57 +113,6 @@ def recalculate_corp_data():
 
         corp_data.save()
 
-    #DataStorage.corporations_total = get_fats()
-
-    ships = {"Burst", "Scalpel", "Scythe", "Scimitar",
-             "Navitas", "Thalia", "Exequror", "Oneiros",
-             "Bantam", "Kirin", "Osprey", "Basilisk",
-             "Inquisitor", "Deacon", "Augoror", "Guardian"}
-
-    #DataStorage.corporations_logi = get_fats(ships)
-
-    ships = {"Bifrost", "Claymore", "Slepnir",
-             "Magus", "Astarte", "Eos",
-             "Stork", "Nighthawk", "Vulture",
-             "Pontifex", "Absolution", "Damnation"}
-
-    #DataStorage.corporations_boosts = get_fats(ships)
-
-    ships = {"Stiletto", "Slasher", "Rifter", "Sabre", "Claw", 
-             "Incursus", "Atron", "Ares", "Taranis", "Eris", 
-             "Condor", "Merlin", "Crow", "Raptor", "Flycatcher",
-             "Punisher", "Executioner", "Malediction", "Crusader", "Heretic"}
-
-    #DataStorage.corporations_tackle = get_fats(ships)
-
-    ships = {"Vigil", "Vigil Fleet Issue", "Hyena", "Huginn", "Rapier", "Panther",
-             "Maulus", "Maulus Navy Issue", "Keres", "Arazu", "Lachesis", "Sin",
-             "Griffin", "Griffin Navy Issue", "Kitsune", "Rook", "Falcon", "Widow",
-             "Crucifier", "Crucifier Navy Issue", "Sentinel", "Curse", "Pilgrim", "Redeemer",
-             "Curor", "Ashimmu", "Bhaalgorn", "Daredevil", "Vigilant", "Vindicator", 
-             "Garmur", "Orthrus", "Barghest"}
-
-    #DataStorage.corporations_snowflakes = get_fats(ships)
-
-    ships = {"Nidhoggur", "Naglfar", "Naglfar Navy Issue",
-             "Thanatos", "Moros", "Moros Navy Issue",
-             "Chimera", "Phoenix", "Phoenix Navy Issue",
-             "Archon", "Revelation", "Revelation Navy Issue"}
-
-    #DataStorage.corporations_caps = get_fats(ships)
-
-    ships = {"Lif", "Ninazu", "Minokawa", "Apostle", "Loggerhead", "Dagon"}
-
-    #DataStorage.corporations_fax = get_fats(ships)
-
-    ships = {"Hel", "Nyx", "Wyvern", "Aeon", "Vendetta"}
-
-    #DataStorage.corporations_supers = get_fats(ships)
-
-    ships = {"Ragnarok", "Erebus", "Leviathan", "Avatar", "Molok", "Komodo", "Vanquisher"}
-
-    #DataStorage.corporations_titans = get_fats(ships)
-
 def get_corp_main_char(corp_char, corporation_players):
     records = OwnershipRecord.objects.filter(character=corp_char)
     for record in records:

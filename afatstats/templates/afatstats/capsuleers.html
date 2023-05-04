@@ -3,6 +3,11 @@
 {% load humanize %}
 
 {% block details %}
+    {% if all_fats|length == 0 %}
+    <div class="alert alert-warning" role="alert">
+        No data found - did anyone already FAT a fleet?
+    </div>
+    {% else %}
     <div class="panel panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
@@ -11,11 +16,6 @@
         </div>
 
         <div class="panel-body">
-            {% if all_fats|length == 0 %}
-            <div class="alert alert-warning" role="alert">
-                No data found - did anyone already FAT a fleet?
-            </div>
-            {% else %}
             <table class="table table-striped">
                 <thead>
                   <tr>
@@ -42,9 +42,10 @@
                     {% endfor %}
                 </tbody>
               </table>
-              {% endif %}
+              
         </div>
     </div>
+    {% endif %}
 {% endblock %}
 
 {% block extra_javascript %}

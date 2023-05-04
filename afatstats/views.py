@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.conf import settings
 
 from afat.models import *
 
@@ -40,17 +41,12 @@ def index(request: WSGIRequest) -> HttpResponse:
     """
     context = generate_context(request, "Top Total")
 
-    recalculate_player_data()
-    
-    recalculate_corp_data()
+    # Recalculating data in debug mode, because celery doesn't work without a redis server
+    if settings.DEBUG:
+        recalculate_player_data()
+        recalculate_corp_data()
 
-    #counts = get_fats()
-
-    #account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    #context.update({'account_fat_counts': account_fat_counts})
-
-    all_fats = CapsuleersTotal.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -96,7 +92,9 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
 
     context = generate_context(request, "Top Total")
 
-    all_fats = CapsuleersTotal.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
+
+    print(all_fats)
 
     context.update({'all_fats': all_fats})
 
@@ -107,7 +105,7 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
 def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Logistics")
 
-    all_fats = CapsuleersLogi.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=1).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -118,7 +116,7 @@ def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
 def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Boosts")
 
-    all_fats = CapsuleersBoosts.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=2).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -129,7 +127,7 @@ def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
 def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Tackle")
 
-    all_fats = CapsuleersTackle.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=3).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -140,7 +138,7 @@ def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
 def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Snowflakes")
 
-    all_fats = CapsuleersSnowflakes.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=4).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -151,7 +149,7 @@ def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
 def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Caps")
 
-    all_fats = CapsuleersCaps.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=5).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -162,7 +160,7 @@ def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
 def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top FAX")
 
-    all_fats = CapsuleersFAX.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=6).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -173,7 +171,7 @@ def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
 def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Supers")
 
-    all_fats = CapsuleersSupers.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=7).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 
@@ -184,7 +182,7 @@ def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
 def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Titans")
 
-    all_fats = CapsuleersTitans.objects.all().order_by('-fats')
+    all_fats = CapsuleersStat.objects.filter(identifier=8).order_by('-fats')
 
     context.update({'all_fats': all_fats})
 

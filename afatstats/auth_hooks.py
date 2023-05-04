@@ -10,6 +10,8 @@ from allianceauth.services.hooks import MenuItemHook, UrlHook
 # AA afatstats App
 from afatstats import urls
 
+from .tasks import recalculate_data
+
 
 class afatstatsMenuItem(MenuItemHook):
     """This class ensures only authorized users will see the menu entry"""
@@ -23,6 +25,9 @@ class afatstatsMenuItem(MenuItemHook):
             "afatstats:index",
             navactive=["afatstats:"],
         )
+
+        # Recalculate data immediately after plugin is loaded (it will use celery!)
+        recalculate_data.delay()
 
     def render(self, request):
         """Render the menu item"""
