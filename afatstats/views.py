@@ -20,6 +20,7 @@ from .models import *
 from .capsuleer_helper import *
 from .corporations_helper import *
 from .tasks import *
+from .data import *
 
 def generate_context(request, title):
     context = {"title": title,
@@ -43,11 +44,15 @@ def index(request: WSGIRequest) -> HttpResponse:
     
     recalculate_corp_data()
 
-    counts = get_fats()
+    #counts = get_fats()
 
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
+    #account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
 
-    context.update({'account_fat_counts': account_fat_counts})
+    #context.update({'account_fat_counts': account_fat_counts})
+
+    all_fats = CapsuleersTotal.objects.all().order_by('-fats')
+
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -66,10 +71,15 @@ def search(request: WSGIRequest) -> HttpResponse:
             if character:
                 search_results[character] = set()
                 search_results[character] = (result.alt_character, 
-                                             character.character_name,
-                                             character.character_id,
-                                             character.corporation_name,
-                                             character.corporation_id)
+                                             character[0].character_name,
+                                             character[0].character_id,
+                                             character[0].corporation_name,
+                                             character[0].corporation_id,
+                                             character[0].fats)
+
+                print(character[0].fats)
+
+        context.update({'search_results': search_results})    
 
     return render(request, "afatstats/search.html", context)
 
@@ -86,11 +96,9 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
 
     context = generate_context(request, "Top Total")
 
-    counts = get_fats()
+    all_fats = CapsuleersTotal.objects.all().order_by('-fats')
 
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -99,16 +107,9 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
 def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Logistics")
 
-    ships = {"Burst", "Scalpel", "Scythe", "Scimitar",
-             "Navitas", "Thalia", "Exequror", "Oneiros",
-             "Bantam", "Kirin", "Osprey", "Basilisk",
-             "Inquisitor", "Deacon", "Augoror", "Guardian"}
+    all_fats = CapsuleersLogi.objects.all().order_by('-fats')
 
-    counts = get_fats(ships)
-
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -117,16 +118,9 @@ def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
 def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Boosts")
 
-    ships = {"Bifrost", "Claymore", "Slepnir",
-             "Magus", "Astarte", "Eos",
-             "Stork", "Nighthawk", "Vulture",
-             "Pontifex", "Absolution", "Damnation"}
+    all_fats = CapsuleersBoosts.objects.all().order_by('-fats')
 
-    counts = get_fats(ships)
-
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -135,16 +129,9 @@ def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
 def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Tackle")
 
-    ships = {"Stiletto", "Slasher", "Rifter", "Sabre", "Claw", 
-             "Incursus", "Atron", "Ares", "Taranis", "Eris", 
-             "Condor", "Merlin", "Crow", "Raptor", "Flycatcher",
-             "Punisher", "Executioner", "Malediction", "Crusader", "Heretic"}
+    all_fats = CapsuleersTackle.objects.all().order_by('-fats')
 
-    counts = get_fats(ships)
-
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -153,18 +140,9 @@ def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
 def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Snowflakes")
 
-    ships = {"Vigil", "Vigil Fleet Issue", "Hyena", "Huginn", "Rapier", "Panther",
-             "Maulus", "Maulus Navy Issue", "Keres", "Arazu", "Lachesis", "Sin",
-             "Griffin", "Griffin Navy Issue", "Kitsune", "Rook", "Falcon", "Widow",
-             "Crucifier", "Crucifier Navy Issue", "Sentinel", "Curse", "Pilgrim", "Redeemer",
-             "Curor", "Ashimmu", "Bhaalgorn", "Daredevil", "Vigilant", "Vindicator", 
-             "Garmur", "Orthrus", "Barghest"}
+    all_fats = CapsuleersSnowflakes.objects.all().order_by('-fats')
 
-    counts = get_fats(ships)
-
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -173,16 +151,9 @@ def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
 def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Caps")
 
-    ships = {"Nidhoggur", "Naglfar", "Naglfar Navy Issue",
-             "Thanatos", "Moros", "Moros Navy Issue",
-             "Chimera", "Phoenix", "Phoenix Navy Issue",
-             "Archon", "Revelation", "Revelation Navy Issue"}
+    all_fats = CapsuleersCaps.objects.all().order_by('-fats')
 
-    counts = get_fats(ships)
-
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -190,13 +161,10 @@ def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
 @permission_required("afatstats.capsuleer_fax")
 def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top FAX")
-    ships = {"Lif", "Ninazu", "Minokawa", "Apostle", "Loggerhead", "Dagon"}
 
-    counts = get_fats(ships)
+    all_fats = CapsuleersFAX.objects.all().order_by('-fats')
 
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -205,13 +173,9 @@ def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
 def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Supers")
 
-    ships = {"Hel", "Nyx", "Wyvern", "Aeon", "Vendetta"}
+    all_fats = CapsuleersSupers.objects.all().order_by('-fats')
 
-    counts = get_fats(ships)
-
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 
@@ -220,13 +184,9 @@ def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
 def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Titans")
 
-    ships = {"Ragnarok", "Erebus", "Leviathan", "Avatar", "Molok", "Komodo", "Vanquisher"}
+    all_fats = CapsuleersTitans.objects.all().order_by('-fats')
 
-    counts = get_fats(ships)
-
-    account_fat_counts = dict(sorted(counts.items(), key=lambda item: item[1][3], reverse=True))
-
-    context.update({'account_fat_counts': account_fat_counts})
+    context.update({'all_fats': all_fats})
 
     return render(request, "afatstats/capsuleers.html", context)
 

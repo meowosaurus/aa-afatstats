@@ -15,7 +15,7 @@
         </div>
     </form>
     <br />
-    {% if False %}
+    {% if search_results %}
     <div class="panel panel-primary">
         
         <div class="panel-heading">
@@ -25,7 +25,33 @@
         </div>
 
         <div class="panel-body">
-            
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th style="width: 25%;">Found Character</th>
+                    <th style="width: 25%;">Main Character</th>
+                    <th style="width: 25%;">Corporation</th>
+                    <th style="width: 25%;">FATs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in search_results.items %}
+                    <td>
+                        {{ value.0 }}
+                    </td>
+                    <td>
+                        {{ value.1 }}
+                    </td>
+                    <td>
+                        <img src="https://images.evetech.net/corporations/{{ value.4 }}/logo?size=32">
+                        {{ value.3 }}
+                    </td>
+                    <td>
+                        {{ value.5 }}
+                    </td>
+                    {% endfor %}
+                </tbody>
+              </table>
         </div>
     </div>
     {% endif %}

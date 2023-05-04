@@ -11,7 +11,7 @@
         </div>
 
         <div class="panel-body">
-            {% if account_fat_counts|length == 0 %}
+            {% if all_fats|length == 0 %}
             <div class="alert alert-warning" role="alert">
                 No data found - did anyone already FAT a fleet?
             </div>
@@ -26,18 +26,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                    {% for key, value in account_fat_counts.items %}
+                    {% for capsuleer in all_fats %}
                     <tr>
                         <td># {{ forloop.counter }}</td>
                         <td>
-                            <img src="https://images.evetech.net/characters/{{ value.0 }}/portrait?size=32">
-                            {{ key }}
+                            <img src="https://images.evetech.net/characters/{{ capsuleer.character_id }}/portrait?size=32">
+                            {{ capsuleer.character_name }}
                         </td>
                         <td>
-                            <img src="https://images.evetech.net/corporations/{{ value.1 }}/logo?size=32">
-                            {{ value.2 }}
+                            <img src="https://images.evetech.net/corporations/{{ capsuleer.corporation_id }}/logo?size=32">
+                            {{ capsuleer.corporation_name }}
                         </td>
-                        <td>{{ value.3 }}</td>
+                        <td>{{ capsuleer.fats }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

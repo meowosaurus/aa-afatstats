@@ -40,7 +40,6 @@ This plugin is not production ready.
   * FAX FAT increase / decrease
   * Supers FAT increase / decrease
   * Titans FAT increase / decrease
-* Automated updates every x minutes
 * Introducing graphs
 * Search
 
