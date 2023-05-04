@@ -23,18 +23,14 @@ def del_player_models():
 
         CapsuleersStat.objects.all().delete()
     except OperationalError as e:
-        context.update({'error_code': '#1020'})
-        context.update({'error_msg': 'Unable to delete CorporationMains, CorporationAlts and CapsuleersStat models in del_player_models -> capsuleer_helper.py'})
-        return render(request, 'afatstats/error.html', context)
+        print("#1020 -> Unable to delete CorporationMains, CorporationAlts and CapsuleersStat models in del_player_models -> capsuleer_helper.py")
 
 
 def get_fats(ships = "", queue_type = 0):
     try:
         all_fats = AFat.objects.all()
     except (NameError, AttributeError, OperationalError) as e:
-        context.update({'error_code': '#1020'})
-        context.update({'error_msg': 'Unable to load AFat model in get_fats -> capsuleer_helper.py'})
-        return render(request, 'afatstats/error.html', context)
+        print("#1025 -> Unable to load AFat model in get_fats -> capsuleer_helper.py")
 
     try:
         for fat in all_fats:
@@ -67,13 +63,9 @@ def get_fats(ships = "", queue_type = 0):
 
                         sql_queue.save()
             except (NameError, AttributeError, DoesNotExist, OperationalError) as e:
-                context.update({'error_code': '#1022'})
-                context.update({'error_msg': 'Unable to overwrite CapsuleersStat model in get_fats -> capsuleer_helper.py'})
-                return render(request, 'afatstats/error.html', context)
+                print("#1022 -> Unable to overwrite CapsuleersStat model in get_fats -> capsuleer_helper.py")
     except (NameError, AttributeError, OperationalError) as e:
-        context.update({'error_code': '#1021'})
-        context.update({'error_msg': 'Unable get interate through AFat model in get_fats -> capsuleer_helper.py'})
-        return render(request, 'afatstats/error.html', context)
+        print("#1021 -> Unable get interate through AFat model in get_fats -> capsuleer_helper.py")
 
 def recalculate_player_data():
     del_player_models()
@@ -81,9 +73,7 @@ def recalculate_player_data():
     try:
         characters = EveCharacter.objects.all()
     except (NameError, AttributeError, OperationalError) as e:
-        context.update({'error_code': '#1023'})
-        context.update({'error_msg': 'Unable get load EveCharacter model in recalculate_player_data -> capsuleer_helper.py'})
-        return render(request, 'afatstats/error.html', context)
+        print("#1023 -> Unable get load EveCharacter model in recalculate_player_data -> capsuleer_helper.py")
 
     try:
         for character in characters:
@@ -110,9 +100,7 @@ def recalculate_player_data():
                         alt_char.alt_id = character.character_id
                         alt_char.save()
     except (NameError, AttributeError, OperationalError) as e:
-        context.update({'error_code': '#1024'})
-        context.update({'error_msg': 'Unable to overwrite CorporationMains model in recalculate_player_data -> capsuleer_helper.py'})
-        return render(request, 'afatstats/error.html', context)
+        print("#1024 -> Unable to overwrite CorporationMains model in recalculate_player_data -> capsuleer_helper.py")
 
     get_fats("", 0)
 

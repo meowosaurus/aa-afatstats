@@ -25,7 +25,10 @@ from .data import *
 
 def generate_context(request, title):
     context = {"title": title,
-               "permissions": request.user.get_all_permissions()}
+               "permissions": request.user.get_all_permissions(),
+               "current_path": request.path}
+
+    print(request.path)
 
     return context
 
@@ -93,6 +96,11 @@ def search(request: WSGIRequest) -> HttpResponse:
         return render(request, 'afatstats/error.html', context)
 
     return render(request, "afatstats/search.html", context)
+
+def admin(request: WSGIRequest) -> HttpResponse:
+    context = generate_context(request, "Search for Players or Corporations")
+
+    return render(request, "afatstats/admin.html", context)
 
 ### Players
 

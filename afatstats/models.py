@@ -42,20 +42,30 @@ class General(models.Model):
 
 class CorporationData(models.Model):
     corporation_name = models.CharField(max_length=255,
-                                        unique=True)
+                                        unique=True,
+                                        help_text="Corporation's name: A string")
 
-    corporation_id = models.IntegerField(default=0)
+    corporation_id = models.IntegerField(default=0,
+                                         help_text="Corporation's ID: An integer")
 
     corporation_ticker = models.CharField(max_length=255,
-                                        unique=True)
+                                          unique=True,
+                                          help_text="Corporation's ticker: A String")
 
-    member_count = models.IntegerField(default=0)
+    member_count = models.IntegerField(default=0,
+                                       help_text="Corporation's member count: An integer")
 
-    players = models.IntegerField(default=0)
+    players = models.IntegerField(default=0,
+                                  help_text="Corporation's player count: An integer")
 
-    fats = models.IntegerField(default=0)
+    fats = models.IntegerField(default=0,
+                               help_text="Corporation's fats: An integer")
 
-    rel_fats = models.FloatField(default=0)
+    rel_fats = models.FloatField(default=0,
+                                 help_text="Corporation's relative fats: A float")
+
+    shit_metric = models.FloatField(default=0,
+                                    help_text="Corporation's shit metric: A float")
 
     def __str__(self):
         return "[" + self.corporation_ticker + "] " + self.corporation_name
@@ -89,9 +99,11 @@ class CorporationAlts(models.Model):
 ##########################################################
 
 class CapsuleersStat(models.Model):
-    stat = models.CharField(max_length=255, unique=True, default="")
+    stat = models.CharField(max_length=255, unique=True, default="",
+                            help_text="The main identifier to make one row truely unique. Format: (identifier):(character_name) : A String")
 
-    identifier = models.IntegerField(default=0)
+    identifier = models.IntegerField(default=0,
+                                     help_text="The main identifier, used for sorting only: 0 = total, 1 = logi, 2 = boosts, etc: An integer")
 
     character_name = models.CharField(max_length=255)
 

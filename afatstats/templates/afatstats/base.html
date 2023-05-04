@@ -22,7 +22,7 @@
               </div>
               <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                  <li class="dropdown">
+                  <li class="dropdown {% if 'capsuleer' in current_path or current_path == '/fat-leaderboard/' %}active{% endif %}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-user"></i>
                       Capsuleers <span class="caret"></span>
@@ -64,7 +64,7 @@
                     </ul>
                   </li>
                   
-                  <li class="dropdown">
+                  <li class="dropdown {% if 'corporations' in current_path %}active{% endif %}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-users"></i>
                       Corporations <span class="caret"></span>
@@ -110,10 +110,16 @@
                   
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                  <li>
+                  <li class="{% if 'search' in current_path %}active{% endif %}">
                     <a href="{% url 'afatstats:search' %}">
                       <i class="fas fa-search"></i>
                       Search
+                    </a>
+                  </li>
+                  <li class="{% if 'admin' in current_path %}active{% endif %}">
+                    <a href="{% url 'afatstats:admin' %}">
+                      <i class="fas fa-user-cog"></i>
+                      Admin
                     </a>
                   </li>
                 </ul>
