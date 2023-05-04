@@ -38,20 +38,20 @@
                     {% for key, value in search_results.items %}
                     <tr>
                         <td>
-                            <img src="https://images.evetech.net/characters/{{ value.1 }}/portrait?size=32">
                             <a href="https://zkillboard.com/character/{{ value.1 }}/" style="text-decoration: none; color: inherit;" target="_blank">
+                            <img src="https://images.evetech.net/characters/{{ value.1 }}/portrait?size=32">
                                 {{ value.0 }}
                             </a>
                         </td>
                         <td>
-                            <img src="https://images.evetech.net/characters/{{ value.3 }}/portrait?size=32">
                             <a href="https://zkillboard.com/character/{{ value.3 }}/" style="text-decoration: none; color: inherit;" target="_blank">
+                            <img src="https://images.evetech.net/characters/{{ value.3 }}/portrait?size=32">
                             {{ value.2 }}
                             </a>
                         </td>
                         <td>
-                            <img src="https://images.evetech.net/corporations/{{ value.5 }}/logo?size=32">
                             <a href="https://zkillboard.com/corporation/{{ value.5 }}/" style="text-decoration: none; color: inherit;" target="_blank">
+                            <img src="https://images.evetech.net/corporations/{{ value.5 }}/logo?size=32">
                             {{ value.4 }}
                             </a>
                         </td>

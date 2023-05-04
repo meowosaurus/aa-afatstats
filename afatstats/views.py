@@ -59,18 +59,19 @@ def search(request: WSGIRequest) -> HttpResponse:
 
     search_results = dict()
 
-    if query:
-        results = CorporationAlts.objects.filter(alt_character__icontains=query)
+    try:
+        if query:
+            results = CorporationAlts.objects.filter(alt_character__icontains=query)
 
-        for result in results:
-            character = CorporationMains.objects.filter(character_name=result.main_character)
-            if character:
+            for result in results:
+                character = CorporationMains.objects.filter(character_name=result.main_character)
+                if character:
                 
-                temp = "0:" + str(result.main_character)
-                statistic = CapsuleersStat.objects.filter(stat=temp)
+                    temp = "0:" + str(result.main_character)
+                    statistic = CapsuleersStat.objects.filter(stat=temp)
 
-                search_results[character] = set()
-                search_results[character] = (result.alt_character, 
+                    search_results[character] = set()
+                    search_results[character] = (result.alt_character, 
                                              result.alt_id,
                                              character[0].character_name,
                                              character[0].character_id,
@@ -78,9 +79,13 @@ def search(request: WSGIRequest) -> HttpResponse:
                                              character[0].corporation_id,
                                              statistic[0].fats)
 
-                print(character[0].fats)
+                    print(character[0].fats)
 
-        context.update({'search_results': search_results})    
+            context.update({'search_results': search_results}) 
+    except (NameError, AttributeError, ValueError, IndexError, TypeError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     return render(request, "afatstats/search.html", context)
 
@@ -96,8 +101,13 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
     """
 
     context = generate_context(request, "Top Total")
-
-    all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
+    
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     print(all_fats)
 
@@ -110,7 +120,13 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
 def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Logistics")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=1).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=1).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
+
 
     context.update({'all_fats': all_fats})
 
@@ -121,7 +137,13 @@ def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
 def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Boosts")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=2).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=2).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
+
 
     context.update({'all_fats': all_fats})
 
@@ -132,7 +154,12 @@ def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
 def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Tackle")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=3).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=3).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
 
@@ -143,7 +170,12 @@ def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
 def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Snowflakes")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=4).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=4).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
 
@@ -154,7 +186,12 @@ def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
 def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Caps")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=5).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=5).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
 
@@ -165,7 +202,12 @@ def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
 def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top FAX")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=6).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=6).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
 
@@ -176,7 +218,12 @@ def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
 def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Supers")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=7).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=7).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
 
@@ -187,7 +234,12 @@ def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
 def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Top Titans")
 
-    all_fats = CapsuleersStat.objects.filter(identifier=8).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=8).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Blub'})
+        return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
 
@@ -216,142 +268,5 @@ def corporations_relative(request: WSGIRequest) -> HttpResponse:
     
     context.update({'corp_data': corporation_data})
     context.update({'total_fats': False})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_logi")
-def corporations_logi(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Burst", "Scalpel", "Scythe", "Scimitar",
-             "Navitas", "Thalia", "Exequror", "Oneiros",
-             "Bantam", "Kirin", "Osprey", "Basilisk",
-             "Inquisitor", "Deacon", "Augoror", "Guardian"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_boosts")
-def corporations_boosts(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Bifrost", "Claymore", "Slepnir",
-             "Magus", "Astarte", "Eos",
-             "Stork", "Nighthawk", "Vulture",
-             "Pontifex", "Absolution", "Damnation"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_tackle")
-def corporations_tackle(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Stiletto", "Slasher", "Rifter", "Sabre", "Claw", 
-             "Incursus", "Atron", "Ares", "Taranis", "Eris", 
-             "Condor", "Merlin", "Crow", "Raptor", "Flycatcher",
-             "Punisher", "Executioner", "Malediction", "Crusader", "Heretic"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_snowflakes")
-def corporations_snowflakes(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Vigil", "Vigil Fleet Issue", "Hyena", "Huginn", "Rapier", "Panther",
-             "Maulus", "Maulus Navy Issue", "Keres", "Arazu", "Lachesis", "Sin",
-             "Griffin", "Griffin Navy Issue", "Kitsune", "Rook", "Falcon", "Widow",
-             "Crucifier", "Crucifier Navy Issue", "Sentinel", "Curse", "Pilgrim", "Redeemer",
-             "Curor", "Ashimmu", "Bhaalgorn", "Daredevil", "Vigilant", "Vindicator", 
-             "Garmur", "Orthrus", "Barghest"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_caps")
-def corporations_caps(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Nidhoggur", "Naglfar", "Naglfar Navy Issue",
-             "Thanatos", "Moros", "Moros Navy Issue",
-             "Chimera", "Phoenix", "Phoenix Navy Issue",
-             "Archon", "Revelation", "Revelation Navy Issue"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_fax")
-def corporations_fax(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Lif", "Ninazu", "Minokawa", "Apostle", "Loggerhead", "Dagon"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_supers")
-def corporations_supers(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Hel", "Nyx", "Wyvern", "Aeon", "Vendetta"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
-            
-    return render(request, "afatstats/corporations.html", context)
-
-@login_required
-@permission_required("afatstats.corporations_titans")
-def corporations_titans(request: WSGIRequest) -> HttpResponse:
-    context = generate_context(request, "Relative Corp Participation")
-
-    ships = {"Ragnarok", "Erebus", "Leviathan", "Avatar", "Molok", "Komodo", "Vanquisher"}
-
-    corporation_data = get_corporation_data(context, True, ships)
-
-    corp_fat_counts = dict(sorted(corporation_data.items(), key=lambda item: item[1][5], reverse=True))
-
-    context.update({'corp_fat_counts': corp_fat_counts})
             
     return render(request, "afatstats/corporations.html", context)

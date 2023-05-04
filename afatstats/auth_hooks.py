@@ -21,7 +21,7 @@ class afatstatsMenuItem(MenuItemHook):
         MenuItemHook.__init__(
             self,
             _("FAT Leaderboard"),
-            "fas fa-chart-line fa-fw",
+            "fas fa-list-ol fa-fw",
             "afatstats:index",
             navactive=["afatstats:"],
         )

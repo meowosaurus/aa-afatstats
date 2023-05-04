@@ -40,15 +40,6 @@ class General(models.Model):
                       ("corporations_supers", "Can access corporations supers statistics"),
                       ("corporations_titans", "Can access corporations titans statistics"),)
 
-
-class MainCharacters(models.Model):
-    main_character = models.CharField(max_length=255)
-
-    alt_character = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.main_character + ": " + self.alt_character
-
 class CorporationData(models.Model):
     corporation_name = models.CharField(max_length=255,
                                         unique=True)
