@@ -60,18 +60,23 @@ def search(request: WSGIRequest) -> HttpResponse:
     search_results = dict()
 
     if query:
-        results = CorporationAlts.objects.filter(alt_character=query)
+        results = CorporationAlts.objects.filter(alt_character__icontains=query)
 
         for result in results:
             character = CorporationMains.objects.filter(character_name=result.main_character)
             if character:
+                
+                temp = "0:" + str(result.main_character)
+                statistic = CapsuleersStat.objects.filter(stat=temp)
+
                 search_results[character] = set()
                 search_results[character] = (result.alt_character, 
+                                             result.alt_id,
                                              character[0].character_name,
                                              character[0].character_id,
                                              character[0].corporation_name,
                                              character[0].corporation_id,
-                                             character[0].fats)
+                                             statistic[0].fats)
 
                 print(character[0].fats)
 

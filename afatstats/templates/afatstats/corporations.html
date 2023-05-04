@@ -32,7 +32,9 @@
                         <td># {{ forloop.counter }}</td>
                         <td>
                             <img src="https://images.evetech.net/corporations/{{ data.corporation_id }}/logo?size=32">
+                            <a href="https://zkillboard.com/corporation/{{ data.corporation_id }}/" style="text-decoration: none; color: inherit;" target="_blank">
                             {{ data.corporation_name }}
+                            </a>
                         </td>
                         <td>
                             {{ data.players }}

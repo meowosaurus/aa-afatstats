@@ -31,11 +31,15 @@
                         <td># {{ forloop.counter }}</td>
                         <td>
                             <img src="https://images.evetech.net/characters/{{ capsuleer.character_id }}/portrait?size=32">
+                            <a href="https://zkillboard.com/character/{{ capsuleer.character_id }}/" style="text-decoration: none; color: inherit;" target="_blank">
                             {{ capsuleer.character_name }}
+                            </a>
                         </td>
                         <td>
                             <img src="https://images.evetech.net/corporations/{{ capsuleer.corporation_id }}/logo?size=32">
+                            <a href="https://zkillboard.com/corporation/{{ capsuleer.corporation_id }}/" style="text-decoration: none; color: inherit;" target="_blank">
                             {{ capsuleer.corporation_name }}
+                            </a>
                         </td>
                         <td>{{ capsuleer.fats }}</td>
                     </tr>

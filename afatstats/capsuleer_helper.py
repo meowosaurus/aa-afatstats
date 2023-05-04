@@ -81,6 +81,7 @@ def recalculate_player_data():
                     alt_char = CorporationAlts()
                     alt_char.main_character = record.user
                     alt_char.alt_character = character.character_name
+                    alt_char.alt_id = character.character_id
                     alt_char.save()
 
     get_fats("", 0)

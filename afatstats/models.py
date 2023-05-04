@@ -88,6 +88,8 @@ class CorporationAlts(models.Model):
     alt_character = models.CharField(max_length=255,
                                       unique=True)
 
+    alt_id = models.IntegerField(default=0)
+
     main_character = models.CharField(max_length=255)
 
     def __str__(self):

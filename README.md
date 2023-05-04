@@ -17,6 +17,12 @@ This plugin is not production ready.
 * Corporations leaderboard
   * Absolute Participation (all fats for the current month)
   * Relative Participation (all fats relative to their size)
+* Permissions for every statistic
+* Search
+
+## Planned
+* Corporations leaderboard
+  * Shit metric (Admin selects the min. FATs per month and it calculates how bad a corporation is relative to their size)
   * Logi Participation
   * Boosts Participation
   * Tackle Participation
@@ -25,11 +31,6 @@ This plugin is not production ready.
   * FAX Participation
   * Supers Participation
   * Titans Participation
-* Permissions for every statistic
-
-## Planned
-* Corporations leaderboard
-  * Shit metric (Admin selects the min. FATs per month and it calculates how bad a corporation is relative to their size)
 * Alliance statistics
   * FAT increase / decrease compared to other months
   * Logi FAT increase / decrease
@@ -41,7 +42,6 @@ This plugin is not production ready.
   * Supers FAT increase / decrease
   * Titans FAT increase / decrease
 * Introducing graphs
-* Search
 
 ### Active devs:
 * [Meowosaurus](https://github.com/meowosaurus)

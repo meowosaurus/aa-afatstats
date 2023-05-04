@@ -28,7 +28,7 @@
             <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th style="width: 25%;">Found Character</th>
+                    <th style="width: 25%;">Result</th>
                     <th style="width: 25%;">Main Character</th>
                     <th style="width: 25%;">Corporation</th>
                     <th style="width: 25%;">FATs</th>
@@ -36,19 +36,29 @@
                 </thead>
                 <tbody>
                     {% for key, value in search_results.items %}
-                    <td>
-                        {{ value.0 }}
-                    </td>
-                    <td>
-                        {{ value.1 }}
-                    </td>
-                    <td>
-                        <img src="https://images.evetech.net/corporations/{{ value.4 }}/logo?size=32">
-                        {{ value.3 }}
-                    </td>
-                    <td>
-                        {{ value.5 }}
-                    </td>
+                    <tr>
+                        <td>
+                            <img src="https://images.evetech.net/characters/{{ value.1 }}/portrait?size=32">
+                            <a href="https://zkillboard.com/character/{{ value.1 }}/" style="text-decoration: none; color: inherit;" target="_blank">
+                                {{ value.0 }}
+                            </a>
+                        </td>
+                        <td>
+                            <img src="https://images.evetech.net/characters/{{ value.3 }}/portrait?size=32">
+                            <a href="https://zkillboard.com/character/{{ value.3 }}/" style="text-decoration: none; color: inherit;" target="_blank">
+                            {{ value.2 }}
+                            </a>
+                        </td>
+                        <td>
+                            <img src="https://images.evetech.net/corporations/{{ value.5 }}/logo?size=32">
+                            <a href="https://zkillboard.com/corporation/{{ value.5 }}/" style="text-decoration: none; color: inherit;" target="_blank">
+                            {{ value.4 }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ value.6 }}
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
               </table>
