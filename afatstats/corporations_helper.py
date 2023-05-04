@@ -20,13 +20,28 @@ from .capsuleer_helper import *
 from .data import *
 
 def del_corp_models():
-    CorporationData.objects.all().delete()
+    try:
+        CorporationData.objects.all().delete()
+    except OperationalError as e:
+        context.update({'error_code': '#1019'})
+        context.update({'error_msg': 'Unable to delete CorporationData model in del_corp_models -> corporations_helper.py'})
+        return render(request, 'afatstats/error.html', context)
 
-def generate_corps_data(total = True):
+def load_corps_data(total = True):
     if total is False:
-        corps_data = CorporationData.objects.all().order_by('-rel_fats')[:50]
+        try:
+            corps_data = CorporationData.objects.all().order_by('-rel_fats')[:50]
+        except (NameError, AttributeError, ValueError) as e:
+            context.update({'error_code': '#1011'})
+            context.update({'error_msg': 'Unable to load CorporationData model for column "-rel_fats" in load_corps_data -> corporations_helper.py'})
+            return render(request, 'afatstats/error.html', context)
     else:
-        corps_data = CorporationData.objects.all().order_by('-fats')[:50]
+        try:
+            corps_data = CorporationData.objects.all().order_by('-fats')[:50]
+        except (NameError, AttributeError, ValueError) as e:
+            context.update({'error_code': '#1012'})
+            context.update({'error_msg': 'Unable to load CorporationData model for column "-fats" in load_corps_data -> corporations_helper.py'})
+            return render(request, 'afatstats/error.html', context)
 
     return corps_data
 
@@ -72,46 +87,76 @@ def get_corporation_data(ships=""):
 def recalculate_corp_data():
     del_corp_models()
 
-    all_corps = EveCorporationInfo.objects.all()
+    try:
+        all_corps = EveCorporationInfo.objects.all()
+    except (NameError, AttributeError, OperationalError) as e:
+        context.update({'error_code': '#1013'})
+        context.update({'error_msg': 'Unable to load EveCorporationInfo model in recalculate_corp_data -> corporations_helper.py'})
+        return render(request, 'afatstats/error.html', context)
 
     for corps in all_corps:
-        corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
+        try:
+            corp_characters = EveCharacter.objects.filter(corporation_id=corps.corporation_id)
+        except (NameError, AttributeError, OperationalError) as e:
+            context.update({'error_code': '#1014'})
+            context.update({'error_msg': 'Unable to load EveCharacter model with corporation_id = corps.corporation_id in recalculate_corp_data -> corporations_helper.py'})
+            return render(request, 'afatstats/error.html', context)
 
-        corp_data = CorporationData()
-        corp_data.corporation_name = corps.corporation_name
-        corp_data.corporation_id = corps.corporation_id
-        corp_data.corporation_ticker = corps.corporation_ticker
-        corp_data.member_count = corps.member_count
-        corp_data.players = 0
-        corp_data.fats = 0
-        corp_data.rel_fats = 0
+        try:
+            corp_data = CorporationData()
+            corp_data.corporation_name = corps.corporation_name
+            corp_data.corporation_id = corps.corporation_id
+            corp_data.corporation_ticker = corps.corporation_ticker
+            corp_data.member_count = corps.member_count
+            corp_data.players = 0
+            corp_data.fats = 0
+            corp_data.rel_fats = 0
+        except TypeError as e:
+            context.update({'error_code': '#1015'})
+            context.update({'error_msg': 'Unable to create new CorporationData object in recalculate_corp_data -> corporations_helper.py'})
+            return render(request, 'afatstats/error.html', context)
 
-        # Used to get the actual player count, not the member count
-        corporation_players = {}
+        try:
+            # Used to get the actual player count, not the member count
+            corporation_players = {}
 
-        ships = ""
+            ships = ""
 
-        if corp_characters.exists():
+            if corp_characters.exists():
 
-            for corp_char in corp_characters:
-                # Find main and save it in corporation_players
-                records = OwnershipRecord.objects.filter(character=corp_char)
-                for record in records:
-                    if record.user not in corporation_players:
-                        corporation_players[record.user] = set()
-                        corporation_players[record.user].add(corp_char)
-                    else:
-                        corporation_players[record.user].add(corp_char)
+                for corp_char in corp_characters:
+                    # Find main and save it in corporation_players
+                    try:
+                        records = OwnershipRecord.objects.filter(character=corp_char)
+                        for record in records:
+                            if record.user not in corporation_players:
+                                corporation_players[record.user] = set()
+                                corporation_players[record.user].add(corp_char)
+                            else:
+                                corporation_players[record.user].add(corp_char)
+                    except (NameError, AttributeError, OperationalError) as e:
+                        context.update({'error_code': '#1017'})
+                        context.update({'error_msg': 'Unable to load existing OwnershipRecord object for character = corp_char in recalculate_corp_data -> corporations_helper.py'})
+                        return render(request, 'afatstats/error.html', context)
 
-                # Calculate how many FATs a character has
-                all_fats = AFat.objects.filter(character=corp_char)
-                for fat in all_fats:
-                    corp_data.fats += 1
+                    # Calculate how many FATs a character has
+                    try:
+                        all_fats = AFat.objects.filter(character=corp_char)
+                        for fat in all_fats:
+                            corp_data.fats += 1
+                    except (NameError, AttributeError, OperationalError) as e:
+                        context.update({'error_code': '#1018'})
+                        context.update({'error_msg': 'Unable to load existing AFat object for character = corp_char in recalculate_corp_data -> corporations_helper.py'})
+                        return render(request, 'afatstats/error.html', context)
             
-            corp_data.players = len(corporation_players)
-            corp_data.rel_fats = corp_data.fats / corp_data.players
+                corp_data.players = len(corporation_players)
+                corp_data.rel_fats = corp_data.fats / corp_data.players
 
-        corp_data.save()
+            corp_data.save()
+        except (NameError, AttributeError, OperationalError) as e:
+            context.update({'error_code': '#1016'})
+            context.update({'error_msg': 'Unable to fill new CorporationData object with data in recalculate_corp_data -> corporations_helper.py'})
+            return render(request, 'afatstats/error.html', context)
 
 def get_corp_main_char(corp_char, corporation_players):
     records = OwnershipRecord.objects.filter(character=corp_char)

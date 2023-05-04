@@ -17,72 +17,102 @@ from .models import *
 from .data import *
 
 def del_player_models():
-    CorporationMains.objects.all().delete()
-    CorporationAlts.objects.all().delete()
+    try:
+        CorporationMains.objects.all().delete()
+        CorporationAlts.objects.all().delete()
 
-    CapsuleersStat.objects.all().delete()
+        CapsuleersStat.objects.all().delete()
+    except OperationalError as e:
+        context.update({'error_code': '#1020'})
+        context.update({'error_msg': 'Unable to delete CorporationMains, CorporationAlts and CapsuleersStat models in del_player_models -> capsuleer_helper.py'})
+        return render(request, 'afatstats/error.html', context)
 
 
 def get_fats(ships = "", queue_type = 0):
-    all_fats = AFat.objects.all()
+    try:
+        all_fats = AFat.objects.all()
+    except (NameError, AttributeError, OperationalError) as e:
+        context.update({'error_code': '#1020'})
+        context.update({'error_msg': 'Unable to load AFat model in get_fats -> capsuleer_helper.py'})
+        return render(request, 'afatstats/error.html', context)
 
-    for fat in all_fats:
-        if len(ships) > 0:
-            if not fat.shiptype in ships:
-                continue
+    try:
+        for fat in all_fats:
+            if len(ships) > 0:
+                if not fat.shiptype in ships:
+                    continue
 
-        alt_char = CorporationAlts.objects.get(alt_character=fat.character)
-        if alt_char:
-            alt_data = EveCharacter.objects.get(character_name=alt_char.alt_character)
+            try:
+                alt_char = CorporationAlts.objects.get(alt_character=fat.character)
+                if alt_char:
+                    alt_data = EveCharacter.objects.get(character_name=alt_char.alt_character)
 
-            temp = str(queue_type) + ":" + str(alt_char.main_character)
-            if CapsuleersStat.objects.filter(stat=temp):
-                sql_queue = CapsuleersStat.objects.filter(stat=temp)[0]
+                    temp = str(queue_type) + ":" + str(alt_char.main_character)
+                    if CapsuleersStat.objects.filter(stat=temp):
+                        sql_queue = CapsuleersStat.objects.filter(stat=temp)[0]
 
-                sql_queue.fats += 1
+                        sql_queue.fats += 1
 
-                sql_queue.save()
-            else:
-                sql_queue = CapsuleersStat()
+                        sql_queue.save()
+                    else:
+                        sql_queue = CapsuleersStat()
 
-                sql_queue.stat = str(queue_type) + ":" + str(alt_char.main_character)
-                sql_queue.identifier = queue_type
-                sql_queue.character_name = alt_char.main_character
-                sql_queue.character_id = alt_data.character_id
-                sql_queue.corporation_name = alt_data.corporation_name
-                sql_queue.corporation_id = alt_data.corporation_id
-                sql_queue.fats = 1
+                        sql_queue.stat = str(queue_type) + ":" + str(alt_char.main_character)
+                        sql_queue.identifier = queue_type
+                        sql_queue.character_name = alt_char.main_character
+                        sql_queue.character_id = alt_data.character_id
+                        sql_queue.corporation_name = alt_data.corporation_name
+                        sql_queue.corporation_id = alt_data.corporation_id
+                        sql_queue.fats = 1
 
-                sql_queue.save()
+                        sql_queue.save()
+            except (NameError, AttributeError, DoesNotExist, OperationalError) as e:
+                context.update({'error_code': '#1022'})
+                context.update({'error_msg': 'Unable to overwrite CapsuleersStat model in get_fats -> capsuleer_helper.py'})
+                return render(request, 'afatstats/error.html', context)
+    except (NameError, AttributeError, OperationalError) as e:
+        context.update({'error_code': '#1021'})
+        context.update({'error_msg': 'Unable get interate through AFat model in get_fats -> capsuleer_helper.py'})
+        return render(request, 'afatstats/error.html', context)
 
 def recalculate_player_data():
     del_player_models()
 
-    characters = EveCharacter.objects.all()
+    try:
+        characters = EveCharacter.objects.all()
+    except (NameError, AttributeError, OperationalError) as e:
+        context.update({'error_code': '#1023'})
+        context.update({'error_msg': 'Unable get load EveCharacter model in recalculate_player_data -> capsuleer_helper.py'})
+        return render(request, 'afatstats/error.html', context)
 
-    for character in characters:
-        records = OwnershipRecord.objects.filter(character=character)
-        for record in records:
+    try:
+        for character in characters:
+            records = OwnershipRecord.objects.filter(character=character)
+            for record in records:
             
-            if not CorporationAlts.objects.filter(alt_character=character.character_name):
+                if not CorporationAlts.objects.filter(alt_character=character.character_name):
 
-                main = EveCharacter.objects.filter(character_name=record.user)
-                if main:
+                    main = EveCharacter.objects.filter(character_name=record.user)
+                    if main:
                     
-                    if not CorporationMains.objects.filter(character_name=main[0].character_name):
-                        main_char = CorporationMains()
-                        main_char.character_name = main[0].character_name
-                        main_char.character_id = main[0].character_id
-                        main_char.corporation_name = main[0].corporation_name
-                        main_char.corporation_id = main[0].corporation_id
-                        main_char.fats = 0
-                        main_char.save()
+                        if not CorporationMains.objects.filter(character_name=main[0].character_name):
+                            main_char = CorporationMains()
+                            main_char.character_name = main[0].character_name
+                            main_char.character_id = main[0].character_id
+                            main_char.corporation_name = main[0].corporation_name
+                            main_char.corporation_id = main[0].corporation_id
+                            main_char.fats = 0
+                            main_char.save()
 
-                    alt_char = CorporationAlts()
-                    alt_char.main_character = record.user
-                    alt_char.alt_character = character.character_name
-                    alt_char.alt_id = character.character_id
-                    alt_char.save()
+                        alt_char = CorporationAlts()
+                        alt_char.main_character = record.user
+                        alt_char.alt_character = character.character_name
+                        alt_char.alt_id = character.character_id
+                        alt_char.save()
+    except (NameError, AttributeError, OperationalError) as e:
+        context.update({'error_code': '#1024'})
+        context.update({'error_msg': 'Unable to overwrite CorporationMains model in recalculate_player_data -> capsuleer_helper.py'})
+        return render(request, 'afatstats/error.html', context)
 
     get_fats("", 0)
 

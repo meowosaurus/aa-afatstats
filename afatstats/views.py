@@ -46,7 +46,12 @@ def index(request: WSGIRequest) -> HttpResponse:
         recalculate_player_data()
         recalculate_corp_data()
 
-    all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
+    try:
+        all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
+    except (NameError, AttributeError, ValueError) as e:
+        context.update({'error_code': '#1000'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 0 in index -> views.py'})
+        return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
 
@@ -83,7 +88,7 @@ def search(request: WSGIRequest) -> HttpResponse:
 
             context.update({'search_results': search_results}) 
     except (NameError, AttributeError, ValueError, IndexError, TypeError) as e:
-        context.update({'error_code': '#1000'})
+        context.update({'error_code': '#1001'})
         context.update({'error_msg': 'Blub'})
         return render(request, 'afatstats/error.html', context)
 
@@ -105,8 +110,8 @@ def capsuleers_top(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1002'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 0 in capsuleers_top -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
     print(all_fats)
@@ -123,8 +128,8 @@ def capsuleers_logi(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=1).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1003'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 1 in capsuleers_logi -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
 
@@ -140,8 +145,8 @@ def capsuleers_boosts(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=2).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1004'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 2 in capsuleers_boosts -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
 
@@ -157,8 +162,8 @@ def capsuleers_tackle(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=3).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1005'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 3 in capsuleers_tackle -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
@@ -173,8 +178,8 @@ def capsuleers_snowflakes(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=4).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1006'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 4 in capsuleers_snowflakeds -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
@@ -189,8 +194,8 @@ def capsuleers_caps(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=5).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1007'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 5 in capsuleers_caps -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
@@ -205,8 +210,8 @@ def capsuleers_fax(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=6).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1008'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 6 in capsuleers_fax -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
@@ -221,8 +226,8 @@ def capsuleers_supers(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=7).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1009'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 7 in capsuleers_supers -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
@@ -237,8 +242,8 @@ def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=8).order_by('-fats')
     except (NameError, AttributeError, ValueError) as e:
-        context.update({'error_code': '#1000'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_code': '#1010'})
+        context.update({'error_msg': 'Unable to load CapsuleersStat model with identifier 8 in capsuleers_titans -> views.py'})
         return render(request, 'afatstats/error.html', context)
 
     context.update({'all_fats': all_fats})
@@ -252,7 +257,7 @@ def capsuleers_titans(request: WSGIRequest) -> HttpResponse:
 def corporations_total(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Total Corp Participation Top 50")
 
-    corporation_data = generate_corps_data(True)
+    corporation_data = load_corps_data(True)
 
     context.update({'corp_data': corporation_data})
     context.update({'total_fats': True})
@@ -264,7 +269,7 @@ def corporations_total(request: WSGIRequest) -> HttpResponse:
 def corporations_relative(request: WSGIRequest) -> HttpResponse:
     context = generate_context(request, "Relative Corp Participation Top 50")
 
-    corporation_data = generate_corps_data(False)
+    corporation_data = load_corps_data(False)
     
     context.update({'corp_data': corporation_data})
     context.update({'total_fats': False})
