@@ -48,6 +48,7 @@ def index(request: WSGIRequest) -> HttpResponse:
     if settings.DEBUG:
         recalculate_player_data()
         recalculate_corp_data()
+        print("Debug mode")
 
     try:
         all_fats = CapsuleersStat.objects.filter(identifier=0).order_by('-fats')
@@ -92,7 +93,7 @@ def search(request: WSGIRequest) -> HttpResponse:
             context.update({'search_results': search_results}) 
     except (NameError, AttributeError, ValueError, IndexError, TypeError) as e:
         context.update({'error_code': '#1001'})
-        context.update({'error_msg': 'Blub'})
+        context.update({'error_msg': 'Unable to complete search in search in views.py'})
         return render(request, 'afatstats/error.html', context)
 
     return render(request, "afatstats/search.html", context)
